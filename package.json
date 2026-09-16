@@ -1,0 +1,12 @@
+{
+  "name": "test-real-project",
+  "private": true,
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "test:server": "npm run test --workspace server",
+    "test:web": "npm run test --workspace web"
+  }
+}
