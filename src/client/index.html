@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Submit Defect</title>
+  </head>
+  <body>
+    <form id="defect-form">
+      <label for="title">Title</label>
+      <input id="title" name="title" type="text" required />
+
+      <label for="attachments">Attachments</label>
+      <input id="attachments" name="attachments" type="file" multiple />
+
+      <div id="attachment-errors" role="alert"></div>
+      <div id="attachment-list"></div>
+
+      <button type="submit">Submit Defect</button>
+    </form>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
