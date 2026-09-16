@@ -33,19 +33,19 @@ export class DefectService {
     return this.defectRepository.findAll().filter((defect) => canAccessDefect(user, defect));
   }
 
-  getDefectForUser(defectId: string, user: User): Defect | undefined {
+  getDefectForUser(user: User, defectId: string): Defect | undefined {
     const defect = this.defectRepository.findById(defectId);
     if (!defect || !canAccessDefect(user, defect)) return undefined;
     return defect;
   }
 
-  getCommentsForUser(defectId: string, user: User): Comment[] | undefined {
+  getCommentsForUser(user: User, defectId: string): Comment[] | undefined {
     const defect = this.defectRepository.findById(defectId);
     if (!defect || !canAccessDefect(user, defect)) return undefined;
     return this.defectRepository.findCommentsByDefectId(defectId);
   }
 
-  getHistoryForUser(defectId: string, user: User): HistoryEntry[] | undefined {
+  getHistoryForUser(user: User, defectId: string): HistoryEntry[] | undefined {
     const defect = this.defectRepository.findById(defectId);
     if (!defect || !canAccessDefect(user, defect)) return undefined;
     return this.defectRepository.findHistoryByDefectId(defectId);

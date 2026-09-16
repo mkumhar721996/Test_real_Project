@@ -8,5 +8,10 @@ export function canAccessDefect(user: User, defect: Defect): boolean {
       return defect.reporterId === user.id;
     case "DEVELOPER":
       return defect.assigneeId === user.id;
+    default: {
+      const exhaustiveCheck: never = user.role;
+      void exhaustiveCheck;
+      return false;
+    }
   }
 }
