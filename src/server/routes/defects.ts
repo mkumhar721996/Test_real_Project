@@ -1,7 +1,13 @@
 import { validateNewAttachments, type AttachmentFile } from '../../shared/attachmentValidation.ts';
 import { createDefect } from '../storage/defectStore.ts';
+import { authenticateRequest } from '../auth/authenticate.ts';
 
 export async function handleCreateDefect(request: Request): Promise<Response> {
+  const user = authenticateRequest(request);
+  if (!user) {
+    return Response.json({ error: 'Authentication required.' }, { status: 401 });
+  }
+
   const formData = await request.formData();
   const title = String(formData.get('title') ?? '');
 

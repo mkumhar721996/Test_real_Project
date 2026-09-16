@@ -3,7 +3,12 @@ import assert from 'node:assert/strict';
 import { handleRequest } from '../app.ts';
 import { resetDefectStore } from '../storage/defectStore.ts';
 
-function buildRequest(fields: Record<string, string>, files: { filename: string; content: string; type: string }[]) {
+function buildRequest(
+  fields: Record<string, string>,
+  files: { filename: string; content: string; type: string }[],
+  options: { authenticated?: boolean } = {},
+) {
+  const { authenticated = true } = options;
   const formData = new FormData();
   for (const [key, value] of Object.entries(fields)) {
     formData.append(key, value);
@@ -11,7 +16,8 @@ function buildRequest(fields: Record<string, string>, files: { filename: string;
   for (const file of files) {
     formData.append('attachments', new File([file.content], file.filename, { type: file.type }));
   }
-  return new Request('http://localhost/api/defects', { method: 'POST', body: formData });
+  const headers = authenticated ? { Authorization: 'Bearer test-session-token' } : undefined;
+  return new Request('http://localhost/api/defects', { method: 'POST', body: formData, headers });
 }
 
 test.beforeEach(() => {
@@ -44,6 +50,14 @@ test('AC5: a defect with no attachments is still saved successfully', async () =
 
   assert.equal(response.status, 201);
   assert.deepEqual(body.attachments, []);
+});
+
+test('rejects an unauthenticated submission with 401', async () => {
+  const request = buildRequest({ title: 'Sneaky defect' }, [], { authenticated: false });
+
+  const response = await handleRequest(request);
+
+  assert.equal(response.status, 401);
 });
 
 test('rejects a submission with an unsupported attachment type (defense in depth)', async () => {

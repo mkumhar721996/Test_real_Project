@@ -24,6 +24,7 @@ const ALLOWED_MIME_TYPES = new Set([
   'application/pdf',
   'image/png',
   'image/jpeg',
+  'image/jpg',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'text/plain',
 ]);

@@ -19,6 +19,13 @@ test('AC1: allowed file types are accepted and queued', () => {
   assert.equal(result.rejected.length, 0);
 });
 
+test('AC1: a JPG reported with the non-standard image/jpg MIME type is also accepted', () => {
+  const jpgAlt: AttachmentFile = { name: 'photo-alt.jpg', sizeBytes: 2048, mimeType: 'image/jpg' };
+  const result = validateNewAttachments(0, [jpgAlt]);
+  assert.deepEqual(result.accepted, [jpgAlt]);
+  assert.equal(result.rejected.length, 0);
+});
+
 test('AC2: an unsupported file type is rejected with an inline error identifying it', () => {
   const exe: AttachmentFile = { name: 'tool.exe', sizeBytes: 1000, mimeType: 'application/x-msdownload' };
   const result = validateNewAttachments(0, [exe]);

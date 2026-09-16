@@ -1,5 +1,6 @@
 import { AttachmentFormController } from './attachmentFormController.ts';
 import type { AttachmentFile } from '../shared/attachmentValidation.ts';
+import { buildDefectFormData, toQueuedAttachment, type QueuedAttachment } from './defectSubmission.ts';
 
 const fileInput = document.getElementById('attachments') as HTMLInputElement;
 const errorContainer = document.getElementById('attachment-errors') as HTMLElement;
@@ -8,14 +9,14 @@ const form = document.getElementById('defect-form') as HTMLFormElement;
 
 async function submitDefect(attachments: AttachmentFile[]): Promise<void> {
   const titleInput = document.getElementById('title') as HTMLInputElement;
-  const formData = new FormData();
-  formData.append('title', titleInput.value);
-  for (const attachment of attachments) {
-    const matchingFile = Array.from(fileInput.files ?? []).find((f) => f.name === attachment.name);
-    if (matchingFile) formData.append('attachments', matchingFile);
-  }
+  const formData = buildDefectFormData(titleInput.value, attachments as QueuedAttachment[]);
 
-  const response = await fetch('/api/defects', { method: 'POST', body: formData });
+  const authToken = localStorage.getItem('authToken') ?? '';
+  const response = await fetch('/api/defects', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${authToken}` },
+    body: formData,
+  });
   if (!response.ok) {
     throw new Error('Failed to submit defect. Please try again.');
   }
@@ -24,12 +25,9 @@ async function submitDefect(attachments: AttachmentFile[]): Promise<void> {
 const controller = new AttachmentFormController(fileInput, errorContainer, listContainer, submitDefect);
 
 fileInput.addEventListener('change', () => {
-  const incoming: AttachmentFile[] = Array.from(fileInput.files ?? []).map((file) => ({
-    name: file.name,
-    sizeBytes: file.size,
-    mimeType: file.type,
-  }));
+  const incoming: QueuedAttachment[] = Array.from(fileInput.files ?? []).map(toQueuedAttachment);
   controller.handleFilesSelected(incoming);
+  fileInput.value = '';
 });
 
 form.addEventListener('submit', (event) => {
