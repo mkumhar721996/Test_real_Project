@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { verifyRoleToken } from '../auth/roleToken.ts';
 import { requireRole } from '../middleware/requireRole.ts';
 import { deleteDefect, getDefect, listDefects } from '../services/defectService.ts';
 
@@ -16,7 +17,7 @@ export async function handleDefectsRoute(req: IncomingMessage, res: ServerRespon
   if (segments[0] !== 'defects') return false;
 
   const id = segments[1];
-  const role = req.headers['x-user-role'];
+  const role = verifyRoleToken(req.headers.authorization);
 
   if (req.method === 'GET' && segments.length === 1) {
     sendJson(res, 200, listDefects());
@@ -34,7 +35,7 @@ export async function handleDefectsRoute(req: IncomingMessage, res: ServerRespon
   }
 
   if (req.method === 'DELETE' && segments.length === 2) {
-    if (!isAdmin(typeof role === 'string' ? role : undefined)) {
+    if (!isAdmin(role)) {
       sendJson(res, 403, { error: 'Forbidden' });
       return true;
     }

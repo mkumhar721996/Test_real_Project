@@ -1,7 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { issueRoleToken } from '../src/auth/roleToken.ts';
 import { db } from '../src/db/store.ts';
 import { startTestServer } from './helpers/testServer.ts';
+
+process.env.AUTH_TOKEN_SECRET ??= 'test-secret';
+
+function authHeader(role: 'ADMIN' | 'DEVELOPER' | 'REPORTER'): Record<string, string> {
+  return { authorization: `Bearer ${issueRoleToken(role)}` };
+}
 
 test('AC1: permanently removes the defect and its comments', async () => {
   const server = await startTestServer();
@@ -11,7 +18,7 @@ test('AC1: permanently removes the defect and its comments', async () => {
 
     const response = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
       method: 'DELETE',
-      headers: { 'x-user-role': 'ADMIN' },
+      headers: authHeader('ADMIN'),
     });
 
     assert.equal(response.status, 204);
@@ -29,12 +36,12 @@ test('AC2: no longer appears in list or detail views', async () => {
 
     const deleteResponse = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
       method: 'DELETE',
-      headers: { 'x-user-role': 'ADMIN' },
+      headers: authHeader('ADMIN'),
     });
     assert.equal(deleteResponse.status, 204);
 
     const listResponse = await fetch(`${server.baseUrl}/defects`, {
-      headers: { 'x-user-role': 'ADMIN' },
+      headers: authHeader('ADMIN'),
     });
     const list = (await listResponse.json()) as Array<{ id: string }>;
     assert.equal(
@@ -43,7 +50,7 @@ test('AC2: no longer appears in list or detail views', async () => {
     );
 
     const detailResponse = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
-      headers: { 'x-user-role': 'ADMIN' },
+      headers: authHeader('ADMIN'),
     });
     assert.equal(detailResponse.status, 404);
   } finally {
@@ -59,7 +66,7 @@ for (const status of ['WONT_FIX', 'CLOSED']) {
 
       const response = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
         method: 'DELETE',
-        headers: { 'x-user-role': 'ADMIN' },
+        headers: authHeader('ADMIN'),
       });
 
       assert.equal(response.status, 204);
@@ -70,7 +77,24 @@ for (const status of ['WONT_FIX', 'CLOSED']) {
   });
 }
 
-for (const role of ['DEVELOPER', 'REPORTER']) {
+test('AC4 (security): rejects a forged x-user-role header with no valid signed token', async () => {
+  const server = await startTestServer();
+  try {
+    const defect = db.defect.create({ data: { title: 'Bug', status: 'OPEN' } });
+
+    const response = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
+      method: 'DELETE',
+      headers: { 'x-user-role': 'ADMIN' },
+    });
+
+    assert.equal(response.status, 403);
+    assert.notEqual(db.defect.findUnique({ where: { id: defect.id } }), null);
+  } finally {
+    await server.close();
+  }
+});
+
+for (const role of ['DEVELOPER', 'REPORTER'] as const) {
   test(`AC4: rejects deletion by ${role}`, async () => {
     const server = await startTestServer();
     try {
@@ -78,7 +102,7 @@ for (const role of ['DEVELOPER', 'REPORTER']) {
 
       const response = await fetch(`${server.baseUrl}/defects/${defect.id}`, {
         method: 'DELETE',
-        headers: { 'x-user-role': role },
+        headers: authHeader(role),
       });
 
       assert.equal(response.status, 403);
