@@ -65,6 +65,34 @@ test('direct access to a deleted defect 404s for reporter, other reporter, and a
   });
 });
 
+test('DELETE is rejected with 404 for a non-admin caller and the defect is not removed', async () => {
+  await withServer(async (baseUrl) => {
+    defectStore.create({
+      id: 'd1',
+      title: 'Crash on save',
+      description: 'x',
+      reporterId: 'reporter-1',
+    });
+
+    for (const role of [undefined, 'reporter', 'developer']) {
+      const headers = { 'x-user-id': 'reporter-1' };
+      if (role) headers['x-user-role'] = role;
+
+      const res = await fetch(`${baseUrl}/defects/d1`, {
+        method: 'DELETE',
+        headers,
+      });
+
+      assert.equal(res.status, 404, `expected 404 for role ${role}`);
+    }
+
+    const getRes = await fetch(`${baseUrl}/defects/d1`, {
+      headers: { 'x-user-id': 'reporter-1', 'x-user-role': 'reporter' },
+    });
+    assert.equal(getRes.status, 200);
+  });
+});
+
 test('deleted-defect response reveals nothing and matches never-existed response', async () => {
   await withServer(async (baseUrl) => {
     defectStore.create({

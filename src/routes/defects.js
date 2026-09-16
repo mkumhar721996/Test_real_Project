@@ -41,6 +41,7 @@ function handleRequest(req, res) {
     }
 
     if (req.method === 'DELETE') {
+      if (req.headers['x-user-role'] !== 'admin') return notFound(res);
       const removed = defectStore.remove(id);
       if (!removed) return notFound(res);
       res.writeHead(204);
