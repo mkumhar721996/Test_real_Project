@@ -47,6 +47,18 @@ test("denies a Developer attempting to change any user's role, including their o
   assert.equal(userRepository.getUser(developer.id)?.role, "Developer");
 });
 
+test("denies an Admin attempting to change their own role", () => {
+  const { userRepository, service } = setup();
+  const admin: User = { id: "admin-1", name: "Ada", role: "Admin" };
+  userRepository.seed([admin]);
+
+  assert.throws(
+    () => service.assignRole(admin, admin.id, "Reporter"),
+    PermissionDeniedError,
+  );
+  assert.equal(userRepository.getUser(admin.id)?.role, "Admin");
+});
+
 test("denies a Reporter attempting to change another user's role", () => {
   const { userRepository, service } = setup();
   const reporter: User = { id: "rep-1", name: "Rita", role: "Reporter" };

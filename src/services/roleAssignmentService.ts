@@ -16,7 +16,7 @@ export class RoleAssignmentService {
   }
 
   assignRole(actor: User, targetUserId: string, newRole: Role): void {
-    if (actor.role !== "Admin") {
+    if (actor.role !== "Admin" || actor.id === targetUserId) {
       this.auditLogRepository.record({
         timestamp: new Date().toISOString(),
         actorId: actor.id,
@@ -24,9 +24,11 @@ export class RoleAssignmentService {
         type: "PERMISSION_DENIED",
         details: { attemptedAction: ASSIGN_ROLE_ACTION, attemptedRole: newRole },
       });
-      throw new PermissionDeniedError(
-        `User ${actor.id} with role ${actor.role} is not permitted to assign roles`,
-      );
+      const reason =
+        actor.id === targetUserId
+          ? `User ${actor.id} is not permitted to change their own role`
+          : `User ${actor.id} with role ${actor.role} is not permitted to assign roles`;
+      throw new PermissionDeniedError(reason);
     }
 
     const target = this.userRepository.getUser(targetUserId);
