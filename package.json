@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "test:defects-api": "node --test test/**/*.test.js"
+    "test:defects-api": "node --test 'test/**/*.test.js'"
   },
   "dependencies": {
     "react": "^18.3.1",
