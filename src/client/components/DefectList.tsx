@@ -9,7 +9,7 @@ export interface DefectListProps {
 
 export function DefectList({ currentUser }: DefectListProps) {
   const [filters, setFilters] = useState<DefectFiltersType>({});
-  const { defects, isLoading } = useDefects(currentUser, filters);
+  const { defects, isLoading, error } = useDefects(currentUser, filters);
 
   return (
     <div>
@@ -18,6 +18,8 @@ export function DefectList({ currentUser }: DefectListProps) {
         <div role="status" aria-label="Loading defects">
           Loading…
         </div>
+      ) : error ? (
+        <p role="alert">Failed to load defects. Please try again.</p>
       ) : defects.length === 0 ? (
         <p>No defects match the current filters.</p>
       ) : (

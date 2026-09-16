@@ -33,4 +33,14 @@ describe('useDefects', () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.defects).toEqual(fixture);
   });
+
+  it('stops loading and exposes an error when the fetch rejects', async () => {
+    vi.spyOn(defectsApi, 'fetchDefects').mockRejectedValue(new Error('network down'));
+
+    const { result } = renderHook(() => useDefects(reporter, {}));
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.defects).toEqual([]);
+    expect(result.current.error).toBeInstanceOf(Error);
+  });
 });

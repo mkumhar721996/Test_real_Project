@@ -10,6 +10,16 @@ describe('GET /api/defects', () => {
     expect(res.status).toBe(401);
   });
 
+  it('rejects requests with an arbitrary, non-allowlisted role value', async () => {
+    const app = createApp();
+    const res = await request(app)
+      .get('/api/defects')
+      .set('x-user-id', 'u1')
+      .set('x-user-role', 'SUPER_ADMIN');
+
+    expect(res.status).toBe(401);
+  });
+
   it('scopes results to the reporter who created them', async () => {
     const app = createApp();
     const res = await request(app)

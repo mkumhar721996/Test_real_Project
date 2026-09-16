@@ -35,4 +35,11 @@ describe('DefectList', () => {
     render(<DefectList currentUser={reporter} />);
     expect(await screen.findByText('Login button broken')).toBeInTheDocument();
   });
+
+  it('shows an error message and clears the loading state when the fetch fails', async () => {
+    vi.spyOn(defectsApi, 'fetchDefects').mockRejectedValue(new Error('network down'));
+    render(<DefectList currentUser={reporter} />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(/failed to load defects/i);
+    expect(screen.queryByRole('status', { name: /loading defects/i })).not.toBeInTheDocument();
+  });
 });
