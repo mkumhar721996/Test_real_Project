@@ -11,10 +11,9 @@ async function submitDefect(attachments: AttachmentFile[]): Promise<void> {
   const titleInput = document.getElementById('title') as HTMLInputElement;
   const formData = buildDefectFormData(titleInput.value, attachments as QueuedAttachment[]);
 
-  const authToken = localStorage.getItem('authToken') ?? '';
   const response = await fetch('/api/defects', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken') ?? ''}` },
     body: formData,
   });
   if (!response.ok) {
