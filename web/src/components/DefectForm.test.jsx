@@ -1,9 +1,13 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, vi, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DefectForm } from './DefectForm.jsx';
 
 describe('DefectForm', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('renders a field for every piece of information required to create a defect', () => {
     render(<DefectForm onSubmitSuccess={() => {}} />);
 
@@ -30,7 +34,7 @@ describe('DefectForm', () => {
   test('submits successfully when all required fields are filled', async () => {
     const onSubmitSuccess = vi.fn();
     const createdDefect = { id: '1', title: 'Login fails', status: 'New' };
-    global.fetch = vi.fn().mockResolvedValue({
+    vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
       json: async () => createdDefect,
     });
