@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Design System Style Guide</title>
+<link rel="stylesheet" href="./tokens.css" />
+<link rel="stylesheet" href="./prototype-utils.css" />
+<style>
+  body {
+    margin: 0;
+    padding: var(--space-4);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-family-base);
+  }
+  h1 {
+    font-size: calc(var(--font-size-lg) * 1.5);
+  }
+  h2 {
+    font-size: var(--font-size-lg);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-1);
+    margin-top: var(--space-4);
+  }
+  section {
+    margin-bottom: var(--space-4);
+  }
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-3);
+  }
+  .swatch {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+  }
+  .swatch-color {
+    height: 64px;
+  }
+  .swatch-label {
+    padding: var(--space-2);
+    background-color: var(--color-surface);
+  }
+  .swatch-label code {
+    display: block;
+    margin-top: var(--space-1);
+  }
+  .dimension-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+  .dimension-bar {
+    background-color: var(--color-primary);
+    height: var(--space-2);
+  }
+  .type-row {
+    margin-bottom: var(--space-3);
+  }
+  .component-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: flex-start;
+    margin-bottom: var(--space-3);
+  }
+</style>
+</head>
+<body>
+  <h1>Design System Style Guide</h1>
+  <p>Live reference rendering every token from <code>tokens.json</code> (via <code>tokens.css</code>) and every utility/component class from <code>prototype-utils.css</code>.</p>
+
+  <section>
+    <h2>Colors</h2>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-fg);"></div>
+        <div class="swatch-label">color-fg<code>--color-fg</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-bg); border-bottom: 1px solid var(--color-border);"></div>
+        <div class="swatch-label">color-bg<code>--color-bg</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-primary);"></div>
+        <div class="swatch-label">color-primary<code>--color-primary</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-primary-fg); border-bottom: 1px solid var(--color-border);"></div>
+        <div class="swatch-label">color-primary-fg<code>--color-primary-fg</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-border);"></div>
+        <div class="swatch-label">color-border<code>--color-border</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-surface);"></div>
+        <div class="swatch-label">color-surface<code>--color-surface</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Spacing</h2>
+    <div class="dimension-row">
+      <span style="width: 80px;">space-1</span>
+      <div class="dimension-bar" style="width: var(--space-1);"></div>
+      <code>--space-1</code>
+    </div>
+    <div class="dimension-row">
+      <span style="width: 80px;">space-2</span>
+      <div class="dimension-bar" style="width: var(--space-2);"></div>
+      <code>--space-2</code>
+    </div>
+    <div class="dimension-row">
+      <span style="width: 80px;">space-3</span>
+      <div class="dimension-bar" style="width: var(--space-3);"></div>
+      <code>--space-3</code>
+    </div>
+    <div class="dimension-row">
+      <span style="width: 80px;">space-4</span>
+      <div class="dimension-bar" style="width: var(--space-4);"></div>
+      <code>--space-4</code>
+    </div>
+  </section>
+
+  <section>
+    <h2>Radii</h2>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-primary); border-radius: var(--radius-sm);"></div>
+        <div class="swatch-label">radius-sm<code>--radius-sm</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-primary); border-radius: var(--radius-md);"></div>
+        <div class="swatch-label">radius-md<code>--radius-md</code></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background-color: var(--color-primary); border-radius: var(--radius-lg);"></div>
+        <div class="swatch-label">radius-lg<code>--radius-lg</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Typography</h2>
+    <div class="type-row" style="font-size: var(--font-size-sm);">font-size-sm — The quick brown fox jumps over the lazy dog. <code>--font-size-sm</code></div>
+    <div class="type-row" style="font-size: var(--font-size-md);">font-size-md — The quick brown fox jumps over the lazy dog. <code>--font-size-md</code></div>
+    <div class="type-row" style="font-size: var(--font-size-lg);">font-size-lg — The quick brown fox jumps over the lazy dog. <code>--font-size-lg</code></div>
+    <div class="type-row" style="font-weight: var(--font-weight-regular);">font-weight-regular — Regular weight text. <code>--font-weight-regular</code></div>
+    <div class="type-row" style="font-weight: var(--font-weight-bold);">font-weight-bold — Bold weight text. <code>--font-weight-bold</code></div>
+    <div class="type-row" style="font-family: var(--font-family-base);">font-family-base — Sample text in the base font family. <code>--font-family-base</code></div>
+  </section>
+
+  <section>
+    <h2>Shadow</h2>
+    <div class="swatch-grid">
+      <div class="swatch" style="border: none;">
+        <div style="height: 64px; margin: var(--space-2); box-shadow: var(--shadow-sm); border-radius: var(--radius-md); background-color: var(--color-bg);"></div>
+        <div class="swatch-label">shadow-sm<code>--shadow-sm</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Buttons</h2>
+    <div class="component-row">
+      <button class="btn btn-primary">Primary button</button>
+      <button class="btn btn-secondary">Secondary button</button>
+    </div>
+    <p>Classes: <code>.btn.btn-primary</code>, <code>.btn.btn-secondary</code> — aliases <code>--button-primary-background</code>, <code>--button-primary-foreground</code>, <code>--button-primary-border</code>, <code>--button-primary-radius</code>, <code>--button-secondary-background</code>, <code>--button-secondary-foreground</code>, <code>--button-secondary-border</code>.</p>
+  </section>
+
+  <section>
+    <h2>Card</h2>
+    <div class="component-row">
+      <div class="card" style="max-width: 320px;">
+        <h3 class="card-title">Card title</h3>
+        <p class="card-body">This card demonstrates <code>card.default.*</code> alias tokens for background, border, and radius.</p>
+      </div>
+    </div>
+    <p>Classes: <code>.card</code>, <code>.card-title</code>, <code>.card-body</code> — aliases <code>--card-default-background</code>, <code>--card-default-border</code>, <code>--card-default-radius</code>.</p>
+  </section>
+
+  <section>
+    <h2>Chips</h2>
+    <div class="component-row">
+      <span class="chip">Default chip</span>
+      <span class="chip chip-primary">Primary chip</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Form Controls</h2>
+    <div class="component-row">
+      <div class="form-field" style="width: 240px;">
+        <label class="form-label" for="sample-input">Label</label>
+        <input class="form-input" id="sample-input" type="text" placeholder="Placeholder text" />
+      </div>
+    </div>
+  </section>
+</body>
+</html>

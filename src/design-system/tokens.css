@@ -1,0 +1,36 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #101723; /** Primary text color on light backgrounds. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-primary: #2563eb; /** Primary brand/interactive color. */
+  --color-primary-fg: #ffffff; /** Text/icon color for content placed on top of color-primary. */
+  --color-border: #d8dee5; /** Default border color for surfaces and controls. */
+  --color-surface: #f9fafc; /** Elevated surface background (cards, panels). */
+  --space-1: 4px; /** Smallest spacing unit. */
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 12px;
+  --font-size-md: 16px;
+  --font-size-lg: 24px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --shadow-sm: 0px 1px 3px 0px rgb(6% 9% 14%); /** Subtle elevation used for cards. */
+  --button-primary-background: var(--color-primary); /** Alias: primary button fill. */
+  --button-primary-foreground: var(--color-primary-fg); /** Alias: primary button text. */
+  --button-primary-border: var(--color-primary); /** Alias: primary button border. */
+  --button-primary-radius: var(--radius-md); /** Alias: primary button corner radius. */
+  --button-secondary-background: var(--color-bg); /** Alias: secondary button fill. */
+  --button-secondary-foreground: var(--color-fg); /** Alias: secondary button text. */
+  --button-secondary-border: var(--color-border); /** Alias: secondary button border. */
+  --card-default-background: var(--color-surface); /** Alias: default card fill. */
+  --card-default-border: var(--color-border); /** Alias: default card border. */
+  --card-default-radius: var(--radius-lg); /** Alias: default card corner radius. */
+}
