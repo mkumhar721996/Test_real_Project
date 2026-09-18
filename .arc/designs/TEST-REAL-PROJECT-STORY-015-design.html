@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TEST-REAL-PROJECT-STORY-015 — Admin Defect Deletion</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #101723; /** Primary text color on light backgrounds. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-primary: #2563eb; /** Primary brand/interactive color. */
+  --color-primary-fg: #ffffff; /** Text/icon color for content placed on top of color-primary. */
+  --color-border: #d8dee5; /** Default border color for surfaces and controls. */
+  --color-surface: #f9fafc; /** Elevated surface background (cards, panels). */
+  --space-1: 4px; /** Smallest spacing unit. */
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 12px;
+  --font-size-md: 16px;
+  --font-size-lg: 24px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --shadow-sm: 0px 1px 3px 0px rgb(6% 9% 14%); /** Subtle elevation used for cards. */
+  --button-primary-background: var(--color-primary); /** Alias: primary button fill. */
+  --button-primary-foreground: var(--color-primary-fg); /** Alias: primary button text. */
+  --button-primary-border: var(--color-primary); /** Alias: primary button border. */
+  --button-primary-radius: var(--radius-md); /** Alias: primary button corner radius. */
+  --button-secondary-background: var(--color-bg); /** Alias: secondary button fill. */
+  --button-secondary-foreground: var(--color-fg); /** Alias: secondary button text. */
+  --button-secondary-border: var(--color-border); /** Alias: secondary button border. */
+  --card-default-background: var(--color-surface); /** Alias: default card fill. */
+  --card-default-border: var(--color-border); /** Alias: default card border. */
+  --card-default-radius: var(--radius-lg); /** Alias: default card corner radius. */
+}
+
+</style>
+<style>
+/* Utilities and components built exclusively from design token custom properties. */
+
+/* --- Buttons --- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-2) var(--space-3);
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+  border-radius: var(--button-primary-radius);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-radius: var(--radius-md);
+}
+
+/* --- Card --- */
+
+.card {
+  background-color: var(--card-default-background);
+  border: 1px solid var(--card-default-border);
+  border-radius: var(--card-default-radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family-base);
+  color: var(--color-fg);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg);
+}
+
+/* --- Chip --- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+
+.chip-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+}
+
+/* --- Form controls --- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-family-base);
+}
+
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.form-input {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+}
+
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+/* --- Spacing utilities --- */
+
+.stack-1 > * + * { margin-top: var(--space-1); }
+.stack-2 > * + * { margin-top: var(--space-2); }
+.stack-3 > * + * { margin-top: var(--space-3); }
+.stack-4 > * + * { margin-top: var(--space-4); }
+
+</style>
+
+<!--
+  Design notes for reviewers (also see per-screen annotations below):
+
+  - This project's design system (src/design-system/tokens.json) has no dedicated
+    destructive/danger/error color token — only color-fg, color-bg, color-primary,
+    color-primary-fg, color-border, color-surface. Per UI Guideline §0 ("tokens only —
+    no hardcoded colors"), this prototype does NOT invent a hardcoded red. Instead,
+    delete is a high-emphasis solid button (--color-fg background / --color-bg text,
+    the inverse of the page) paired with a trash icon and the explicit label "Delete
+    permanently", so it reads as serious and different from --btn-primary (blue,
+    used for normal actions) without relying on a color the token set doesn't define.
+    Recommendation: a future design-system iteration should add a semantic
+    `color-danger` / `button-danger-*` token set; until then this is the closest
+    token-safe treatment.
+  - Status is never conveyed by color alone (UI Guideline §3): every status chip pairs
+    a symbol + label text, and the two terminal statuses relevant to this story (Won't
+    Fix, Closed) are visually identical in treatment to non-terminal ones — deletion
+    works the same regardless of status, which is the point of AC3.
+-->
+
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ---------- Reviewer bar (canonical, per UI Guidelines §11) ---------- */
+  #review-bar button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+  }
+  #review-bar button:focus-visible,
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ---------- App shell ---------- */
+  #app-topbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+  }
+  #app-topbar .brand {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-md);
+    white-space: nowrap;
+  }
+  #app-topbar nav {
+    display: flex;
+    gap: var(--space-3);
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  #app-topbar nav a {
+    color: var(--color-fg);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    padding: var(--space-2) var(--space-1);
+    border-bottom: 2px solid transparent;
+  }
+  #app-topbar nav a[aria-current="page"] {
+    border-bottom-color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    white-space: nowrap;
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-4);
+  }
+
+  h1 {
+    font-size: calc(var(--font-size-lg) * 1.2);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .page-sub {
+    color: var(--color-fg);
+    opacity: 0.7;
+    font-size: var(--font-size-sm);
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  /* ---------- List / table ---------- */
+  .defect-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+  .defect-table th {
+    text-align: left;
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+    opacity: 0.65;
+    font-weight: var(--font-weight-bold);
+    padding: var(--space-2) var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .defect-table td {
+    padding: var(--space-3) var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .defect-table tbody tr {
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+  .defect-table tbody tr.row-deleting {
+    opacity: 0.35;
+  }
+  .defect-table tbody tr.row-gone {
+    display: none;
+  }
+  .defect-id {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+    opacity: 0.8;
+    white-space: nowrap;
+  }
+  .defect-title-link {
+    color: var(--color-fg);
+    text-decoration: none;
+    font-weight: var(--font-weight-bold);
+  }
+  .defect-title-link:hover { text-decoration: underline; }
+  .defect-meta-col { color: var(--color-fg); opacity: 0.8; white-space: nowrap; }
+  .actions-col { text-align: right; white-space: nowrap; }
+
+  /* ---------- Status chip (status = icon + label, never color alone) ---------- */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    white-space: nowrap;
+  }
+  .status-chip.is-open { border-color: var(--color-primary); color: var(--color-primary); }
+  .status-chip .dot { font-size: 10px; line-height: 1; }
+
+  /* ---------- Buttons ---------- */
+  .btn-sm { font-size: var(--font-size-sm); padding: var(--space-1) var(--space-2); }
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    color: var(--color-fg);
+  }
+  .btn-icon:hover { background-color: var(--color-surface); }
+  .btn-icon[aria-disabled="true"] {
+    color: var(--color-fg);
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-icon[aria-disabled="true"]:hover { background-color: transparent; }
+
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-fg);
+    border-radius: var(--radius-md);
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .btn-danger:hover { opacity: 0.85; }
+  .btn-danger[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-restricted {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    padding: var(--space-2) var(--space-3);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    opacity: 0.55;
+    cursor: not-allowed;
+    min-height: 44px;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+
+  /* ---------- Detail card ---------- */
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+  .detail-title-block h1 { margin-bottom: var(--space-1); }
+  .detail-id {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--color-fg);
+    opacity: 0.6;
+    font-size: var(--font-size-sm);
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+    padding: var(--space-3);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .meta-item .meta-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    opacity: 0.6;
+    margin-bottom: var(--space-1);
+  }
+  .meta-item .meta-value { font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); }
+
+  .comment {
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    background-color: var(--color-bg);
+  }
+  .comment-meta {
+    font-size: var(--font-size-sm);
+    opacity: 0.6;
+    margin-bottom: var(--space-1);
+  }
+  .restricted-note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    opacity: 0.7;
+    margin-top: var(--space-2);
+  }
+
+  /* ---------- Skeleton (loading state, >300ms rule) ---------- */
+  .skeleton-row td { padding: var(--space-3) var(--space-2); border-bottom: 1px solid var(--color-border); }
+  .skeleton-bar {
+    height: 14px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+  @keyframes skeleton-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(16, 23, 35, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3);
+    z-index: 100;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-card {
+    max-width: 420px;
+    width: 100%;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-default-radius);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-4);
+  }
+  .modal-card h2 {
+    font-size: var(--font-size-lg);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .modal-card p { font-size: var(--font-size-md); line-height: 1.5; }
+  .modal-consequence {
+    font-size: var(--font-size-sm);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3);
+    margin: var(--space-3) 0;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast-region {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 320px;
+  }
+  .toast {
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    animation: toast-in 200ms ease-out;
+  }
+  .toast.toast-denied { background-color: var(--color-surface); color: var(--color-fg); border: 1px solid var(--color-border); }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Deleted / success panel ---------- */
+  .deleted-panel {
+    text-align: center;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--card-default-radius);
+    background-color: var(--color-surface);
+  }
+  .deleted-panel .deleted-icon { font-size: 32px; margin-bottom: var(--space-2); }
+  .deleted-panel h2 { margin: 0 0 var(--space-2) 0; }
+  .deleted-panel p { opacity: 0.75; max-width: 52ch; margin: 0 auto var(--space-3) auto; }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 640px) {
+    .defect-table thead { display: none; }
+    .defect-table, .defect-table tbody, .defect-table tr, .defect-table td { display: block; width: 100%; }
+    .defect-table tr {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+      padding: var(--space-2);
+    }
+    .defect-table td { border-bottom: none; padding: var(--space-1) var(--space-2); }
+    .actions-col { text-align: left; margin-top: var(--space-2); }
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--surface, var(--color-surface));border-bottom:1px solid var(--border, var(--color-border));font-size:13px;font-family:var(--font-sans, var(--font-family-base))">
+  <span style="font-family:var(--font-mono, 'JetBrains Mono', monospace);color:var(--muted, var(--color-fg))">TEST-REAL-PROJECT-STORY-015</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--fg, var(--color-fg))"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<!-- App nav: top bar — Backlog · Board · Reports · Settings (this project has no nav of its
+     own yet, so a conventional issue-tracker top bar is used; the arc platform's own
+     cockpit/sidebar nav does not apply to this project). -->
+
+<div id="screens">
+
+<!-- Screen: Backlog — Admin
+     Notes:
+       - Every row, regardless of status (including the terminal Won't Fix and Closed
+         statuses), exposes a delete icon-button — satisfies AC3 (deletion allowed at any
+         status, including terminal ones).
+       - Clicking delete opens a confirmation modal naming the defect and its comment count.
+         Cancel closes the modal with no change (AC5). Confirm simulates a ~350ms request,
+         then removes the row and shows a success toast (AC1, AC2).
+       - Initial paint shows a skeleton for ~350ms (loading state) before the table renders,
+         per the >300ms skeleton rule. The same pattern applies to the other three screens;
+         it isn't repeated there to keep the clickthrough focused.
+-->
+<div class="screen" data-name="Backlog — Admin">
+  <div id="app-topbar-1"></div>
+  <main>
+    <div class="toolbar">
+      <div>
+        <h1>Backlog</h1>
+        <p class="page-sub">5 defects · viewing as Admin</p>
+      </div>
+      <span class="role-badge">👤 Admin</span>
+    </div>
+
+    <!-- State: loading -->
+    <table class="defect-table" id="admin-table-skeleton">
+      <thead><tr><th>ID</th><th>Title</th><th>Status</th><th>Assignee</th><th></th></tr></thead>
+      <tbody>
+        <tr class="skeleton-row"><td><div class="skeleton-bar" style="width:48px"></div></td><td><div class="skeleton-bar" style="width:220px"></div></td><td><div class="skeleton-bar" style="width:80px"></div></td><td><div class="skeleton-bar" style="width:100px"></div></td><td><div class="skeleton-bar" style="width:44px"></div></td></tr>
+        <tr class="skeleton-row"><td><div class="skeleton-bar" style="width:48px"></div></td><td><div class="skeleton-bar" style="width:180px"></div></td><td><div class="skeleton-bar" style="width:80px"></div></td><td><div class="skeleton-bar" style="width:100px"></div></td><td><div class="skeleton-bar" style="width:44px"></div></td></tr>
+        <tr class="skeleton-row"><td><div class="skeleton-bar" style="width:48px"></div></td><td><div class="skeleton-bar" style="width:260px"></div></td><td><div class="skeleton-bar" style="width:80px"></div></td><td><div class="skeleton-bar" style="width:100px"></div></td><td><div class="skeleton-bar" style="width:44px"></div></td></tr>
+      </tbody>
+    </table>
+
+    <!-- State: list-loaded -->
+    <table class="defect-table" id="admin-table" hidden>
+      <thead>
+        <tr><th>ID</th><th>Title</th><th>Status</th><th>Assignee</th><th class="actions-col">Actions</th></tr>
+      </thead>
+      <tbody id="admin-table-body"><!-- populated by JS from FIXTURE_DEFECTS --></tbody>
+    </table>
+  </main>
+
+  <!-- State: confirm-modal (hidden until a delete icon is clicked) -->
+  <div class="modal-overlay" id="admin-modal" hidden role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="modal-card">
+      <h2 id="admin-modal-title">Delete defect permanently?</h2>
+      <p id="admin-modal-body">This cannot be undone.</p>
+      <div class="modal-consequence" id="admin-modal-consequence"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="admin-modal-cancel">Cancel</button>
+        <button class="btn-danger" id="admin-modal-confirm">🗑 Delete permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-region" id="admin-toast-region" aria-live="polite"></div>
+</div>
+
+<!-- Screen: Backlog — Developer
+     Notes:
+       - Same 5 defects, same statuses. The delete control is present for visibility of the
+         feature but rendered restricted (dashed border, lock icon, aria-disabled — not a
+         native `disabled` attribute, so it stays focusable/reachable by keyboard and screen
+         readers per WCAG rather than disappearing silently).
+       - Clicking or activating it does not delete anything; it surfaces a rejection toast
+         ("Only Admins can permanently delete defects") — this is the visible-feedback form
+         of AC4 ("the action is rejected"), not just an absent button.
+       - A Reporter sees the identical restricted treatment (not shown as a separate screen —
+         the Reporter role is demonstrated on the Detail screen instead, screen 4).
+-->
+<div class="screen" data-name="Backlog — Developer">
+  <div id="app-topbar-2"></div>
+  <main>
+    <div class="toolbar">
+      <div>
+        <h1>Backlog</h1>
+        <p class="page-sub">5 defects · viewing as Developer</p>
+      </div>
+      <span class="role-badge">👤 Developer</span>
+    </div>
+
+    <table class="defect-table">
+      <thead>
+        <tr><th>ID</th><th>Title</th><th>Status</th><th>Assignee</th><th class="actions-col">Actions</th></tr>
+      </thead>
+      <tbody id="dev-table-body"><!-- populated by JS from FIXTURE_DEFECTS --></tbody>
+    </table>
+    <p class="restricted-note">🔒 Only Admins can permanently delete defects. Ask an Admin if this defect needs to be removed.</p>
+  </main>
+
+  <div class="toast-region" id="dev-toast-region" aria-live="polite"></div>
+</div>
+
+<!-- Screen: Defect Detail — Admin (Closed)
+     Notes:
+       - Defect DEF-052 is in the terminal "Closed" status, chosen deliberately to make AC3
+         explicit at the detail level (deletion works the same on a terminal-status defect).
+       - "Delete permanently" opens a confirmation modal naming the exact comment count that
+         will be removed with the defect (AC1). Cancel leaves the page untouched (AC5).
+       - Confirm simulates a ~350ms request, then replaces the whole detail view with a
+         "permanently deleted" panel and a link back to the backlog — demonstrating that the
+         defect no longer has a detail view to show (AC2) and that its comments went with it
+         (AC1), for a defect that started in a terminal state (AC3).
+-->
+<div class="screen" data-name="Defect Detail — Admin (Closed)">
+  <div id="app-topbar-3"></div>
+  <main id="admin-detail-main">
+    <!-- State: detail-loaded -->
+    <div id="admin-detail-content">
+      <div class="detail-header">
+        <div class="detail-title-block">
+          <span class="detail-id">DEF-052</span>
+          <h1>Login page flashes unstyled content</h1>
+          <span class="status-chip"><span class="dot">✓</span> Closed</span>
+        </div>
+        <div>
+          <button class="btn-danger" id="detail-admin-delete-btn">🗑 Delete permanently</button>
+        </div>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">Reporter</span><span class="meta-value">Jordan Lee</span></div>
+        <div class="meta-item"><span class="meta-label">Assignee</span><span class="meta-value">Sam Okafor</span></div>
+        <div class="meta-item"><span class="meta-label">Created</span><span class="meta-value">Aug 12, 2026</span></div>
+        <div class="meta-item"><span class="meta-label">Closed</span><span class="meta-value">Sep 02, 2026</span></div>
+      </div>
+
+      <h2 style="font-size: var(--font-size-lg); border-bottom:1px solid var(--color-border); padding-bottom:var(--space-1);">Comments (3)</h2>
+      <div class="comment">
+        <div class="comment-meta">Jordan Lee · Aug 13, 2026</div>
+        <div>Repro is intermittent — only happens on a cold cache load.</div>
+      </div>
+      <div class="comment">
+        <div class="comment-meta">Sam Okafor · Aug 20, 2026</div>
+        <div>Root cause: font-display swap wasn't set on the base stylesheet link.</div>
+      </div>
+      <div class="comment">
+        <div class="comment-meta">Sam Okafor · Sep 02, 2026</div>
+        <div>Fixed in the last release and verified in staging — closing this out.</div>
+      </div>
+    </div>
+
+    <!-- State: deleted (hidden until confirm) -->
+    <div class="deleted-panel" id="admin-detail-deleted" hidden>
+      <div class="deleted-icon">✅</div>
+      <h2>DEF-052 was permanently deleted</h2>
+      <p>The defect and its 3 comments have been permanently removed. It no longer appears in the backlog or in any detail view.</p>
+      <a class="btn btn-secondary" href="#" onclick="return false;">← Back to Backlog</a>
+    </div>
+  </main>
+
+  <!-- State: confirm-modal -->
+  <div class="modal-overlay" id="detail-admin-modal" hidden role="dialog" aria-modal="true" aria-labelledby="detail-admin-modal-title">
+    <div class="modal-card">
+      <h2 id="detail-admin-modal-title">Delete DEF-052 permanently?</h2>
+      <p>"Login page flashes unstyled content" will be permanently removed. This can't be undone.</p>
+      <div class="modal-consequence">This will also permanently delete all 3 comments on this defect.</div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="detail-admin-modal-cancel">Cancel</button>
+        <button class="btn-danger" id="detail-admin-modal-confirm">🗑 Delete permanently</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Defect Detail — Reporter (Won't Fix)
+     Notes:
+       - Defect DEF-076 is in the other terminal status this story calls out, Won't Fix,
+         shown from a Reporter's point of view.
+       - No delete button is offered in the primary toolbar position at all for this role;
+         a restricted, aria-disabled equivalent sits where the Admin's button would be, plus
+         explanatory microcopy — reinforcing AC4 at the detail level the same way screen 2
+         does at the list level. Activating it produces a rejection toast, never a deletion.
+-->
+<div class="screen" data-name="Defect Detail — Reporter (Won't Fix)">
+  <div id="app-topbar-4"></div>
+  <main>
+    <div class="detail-header">
+      <div class="detail-title-block">
+        <span class="detail-id">DEF-076</span>
+        <h1>Duplicate push notifications on Android</h1>
+        <span class="status-chip"><span class="dot">⊘</span> Won't Fix</span>
+      </div>
+      <div>
+        <button class="btn-restricted" id="detail-reporter-delete-btn" aria-disabled="true">🔒 Delete permanently</button>
+      </div>
+    </div>
+    <p class="restricted-note">🔒 Only Admins can permanently delete defects.</p>
+
+    <div class="meta-grid">
+      <div class="meta-item"><span class="meta-label">Reporter</span><span class="meta-value">Alex Chen</span></div>
+      <div class="meta-item"><span class="meta-label">Assignee</span><span class="meta-value">Sam Okafor</span></div>
+      <div class="meta-item"><span class="meta-label">Created</span><span class="meta-value">Jul 02, 2026</span></div>
+      <div class="meta-item"><span class="meta-label">Won't Fix</span><span class="meta-value">Jul 28, 2026</span></div>
+    </div>
+
+    <h2 style="font-size: var(--font-size-lg); border-bottom:1px solid var(--color-border); padding-bottom:var(--space-1);">Comments (6)</h2>
+    <div class="comment">
+      <div class="comment-meta">Alex Chen · Jul 03, 2026</div>
+      <div>Getting 2-3 duplicate notifications per push on Android 13+.</div>
+    </div>
+    <div class="comment">
+      <div class="comment-meta">Sam Okafor · Jul 15, 2026</div>
+      <div>Confirmed with the vendor SDK — known issue, no fix planned upstream.</div>
+    </div>
+    <div class="comment">
+      <div class="comment-meta">Sam Okafor · Jul 28, 2026</div>
+      <div>Marking Won't Fix — workaround documented in the FAQ instead.</div>
+    </div>
+    <p style="font-size: var(--font-size-sm); opacity:0.6;">+3 more comments</p>
+  </main>
+
+  <div class="toast-region" id="reporter-toast-region" aria-live="polite"></div>
+</div>
+
+</div><!-- /#screens -->
+
+<script>
+// ---- Inline fixture data (no network calls) ----
+const FIXTURE_DEFECTS = [
+  { id: 'DEF-101', title: 'Checkout button unresponsive on Safari', status: 'Open', statusIcon: '●', assignee: 'Priya Nair', comments: 4 },
+  { id: 'DEF-098', title: 'Export CSV truncates last row', status: 'In Progress', statusIcon: '◐', assignee: 'Priya Nair', comments: 2 },
+  { id: 'DEF-076', title: "Duplicate push notifications on Android", status: "Won't Fix", statusIcon: '⊘', assignee: 'Sam Okafor', comments: 6 },
+  { id: 'DEF-052', title: 'Login page flashes unstyled content', status: 'Closed', statusIcon: '✓', assignee: 'Sam Okafor', comments: 3 },
+  { id: 'DEF-039', title: 'Search results pagination skips page 2', status: 'Closed', statusIcon: '✓', assignee: 'Priya Nair', comments: 1 },
+];
+
+function statusChipHtml(defect) {
+  const openClass = defect.status === 'Open' ? ' is-open' : '';
+  return `<span class="status-chip${openClass}"><span class="dot">${defect.statusIcon}</span> ${defect.status}</span>`;
+}
+
+function renderTopbar(activeRoleLabel) {
+  return `
+    <div id="app-topbar">
+      <span class="brand">Test_real_Project</span>
+      <nav>
+        <a href="#" aria-current="page" onclick="return false;">Backlog</a>
+        <a href="#" onclick="return false;">Board</a>
+        <a href="#" onclick="return false;">Reports</a>
+        <a href="#" onclick="return false;">Settings</a>
+      </nav>
+      <span class="role-badge">👤 ${activeRoleLabel}</span>
+    </div>`;
+}
+document.getElementById('app-topbar-1').outerHTML = renderTopbar('Admin');
+document.getElementById('app-topbar-2').outerHTML = renderTopbar('Developer');
+document.getElementById('app-topbar-3').outerHTML = renderTopbar('Admin');
+document.getElementById('app-topbar-4').outerHTML = renderTopbar('Reporter');
+
+function showToast(regionId, message, variant) {
+  const region = document.getElementById(regionId);
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (variant === 'denied' ? ' toast-denied' : '');
+  toast.setAttribute('role', 'status');
+  toast.innerHTML = (variant === 'denied' ? '🔒 ' : '✅ ') + message;
+  region.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ---- Admin backlog: render rows + delete flow ----
+function renderAdminRows() {
+  const body = document.getElementById('admin-table-body');
+  body.innerHTML = FIXTURE_DEFECTS.map(d => `
+    <tr data-id="${d.id}">
+      <td class="defect-id">${d.id}</td>
+      <td><a class="defect-title-link" href="#" onclick="return false;">${d.title}</a></td>
+      <td>${statusChipHtml(d)}</td>
+      <td class="defect-meta-col">${d.assignee}</td>
+      <td class="actions-col">
+        <button class="btn-icon" aria-label="Delete ${d.id} permanently" data-delete-id="${d.id}">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+  body.querySelectorAll('[data-delete-id]').forEach(btn => {
+    btn.addEventListener('click', () => openAdminModal(btn.dataset.deleteId));
+  });
+}
+
+function renderDevRows() {
+  const body = document.getElementById('dev-table-body');
+  body.innerHTML = FIXTURE_DEFECTS.map(d => `
+    <tr data-id="${d.id}">
+      <td class="defect-id">${d.id}</td>
+      <td><a class="defect-title-link" href="#" onclick="return false;">${d.title}</a></td>
+      <td>${statusChipHtml(d)}</td>
+      <td class="defect-meta-col">${d.assignee}</td>
+      <td class="actions-col">
+        <button class="btn-icon" aria-disabled="true" aria-label="Delete unavailable — Admins only" data-denied-id="${d.id}" title="Only Admins can delete defects">🔒</button>
+      </td>
+    </tr>
+  `).join('');
+  body.querySelectorAll('[data-denied-id]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      showToast('dev-toast-region', 'Only Admins can permanently delete defects.', 'denied');
+    });
+  });
+}
+
+// Simulate initial load latency (>300ms skeleton rule), then render.
+setTimeout(() => {
+  renderAdminRows();
+  document.getElementById('admin-table-skeleton').hidden = true;
+  document.getElementById('admin-table').hidden = false;
+}, 350);
+renderDevRows();
+
+let pendingDeleteId = null;
+function openAdminModal(id) {
+  const defect = FIXTURE_DEFECTS.find(d => d.id === id);
+  pendingDeleteId = id;
+  document.getElementById('admin-modal-title').textContent = `Delete ${defect.id} permanently?`;
+  document.getElementById('admin-modal-body').textContent = `"${defect.title}" will be permanently removed. This can't be undone.`;
+  document.getElementById('admin-modal-consequence').textContent =
+    `This will also permanently delete all ${defect.comments} comment${defect.comments === 1 ? '' : 's'} on this defect.`;
+  const modal = document.getElementById('admin-modal');
+  modal.hidden = false;
+  document.getElementById('admin-modal-cancel').focus();
+}
+function closeAdminModal() {
+  document.getElementById('admin-modal').hidden = true;
+  pendingDeleteId = null;
+}
+document.getElementById('admin-modal-cancel').addEventListener('click', closeAdminModal);
+document.getElementById('admin-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'admin-modal') closeAdminModal();
+});
+document.getElementById('admin-modal-confirm').addEventListener('click', () => {
+  const id = pendingDeleteId;
+  const confirmBtn = document.getElementById('admin-modal-confirm');
+  const cancelBtn = document.getElementById('admin-modal-cancel');
+  confirmBtn.disabled = true;
+  cancelBtn.disabled = true;
+  confirmBtn.textContent = 'Deleting…';
+  setTimeout(() => {
+    const row = document.querySelector(`#admin-table-body tr[data-id="${id}"]`);
+    if (row) {
+      row.classList.add('row-deleting');
+      setTimeout(() => row.classList.add('row-gone'), 200);
+    }
+    confirmBtn.disabled = false;
+    cancelBtn.disabled = false;
+    confirmBtn.textContent = '🗑 Delete permanently';
+    closeAdminModal();
+    showToast('admin-toast-region', `${id} and its comments were permanently deleted.`);
+  }, 350);
+});
+
+// ---- Defect Detail — Admin (Closed) delete flow ----
+document.getElementById('detail-admin-delete-btn').addEventListener('click', () => {
+  document.getElementById('detail-admin-modal').hidden = false;
+  document.getElementById('detail-admin-modal-cancel').focus();
+});
+function closeDetailAdminModal() {
+  document.getElementById('detail-admin-modal').hidden = true;
+}
+document.getElementById('detail-admin-modal-cancel').addEventListener('click', closeDetailAdminModal);
+document.getElementById('detail-admin-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'detail-admin-modal') closeDetailAdminModal();
+});
+document.getElementById('detail-admin-modal-confirm').addEventListener('click', () => {
+  const confirmBtn = document.getElementById('detail-admin-modal-confirm');
+  const cancelBtn = document.getElementById('detail-admin-modal-cancel');
+  confirmBtn.disabled = true;
+  cancelBtn.disabled = true;
+  confirmBtn.textContent = 'Deleting…';
+  setTimeout(() => {
+    closeDetailAdminModal();
+    document.getElementById('admin-detail-content').hidden = true;
+    document.getElementById('admin-detail-deleted').hidden = false;
+  }, 350);
+});
+
+// ---- Defect Detail — Reporter (Won't Fix) restricted delete ----
+document.getElementById('detail-reporter-delete-btn').addEventListener('click', () => {
+  showToast('reporter-toast-region', 'Only Admins can permanently delete defects.', 'denied');
+});
+
+// Esc closes any open modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeAdminModal();
+    closeDetailAdminModal();
+  }
+});
+
+// ---- Reviewer bar navigation ----
+const screens = Array.from(document.querySelectorAll('.screen'));
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(screens.length - 1, i));
+  screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+  document.getElementById('screen-label').textContent =
+    `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+}
+document.getElementById('prev-btn').onclick = () => show(cur - 1);
+document.getElementById('next-btn').onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && !e.target.closest('.modal-card')) show(cur + 1);
+  if (e.key === 'ArrowLeft' && !e.target.closest('.modal-card')) show(cur - 1);
+});
+show(0);
+</script>
+</body>
+</html>
+
+<!-- arc:css-inlined -->
