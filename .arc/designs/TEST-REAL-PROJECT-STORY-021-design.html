@@ -4,162 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TEST-REAL-PROJECT-STORY-021 — Employee Records — Design Prototype</title>
-<style>
-/**
- * Do not edit directly, this file was auto-generated.
- */
-
-:root {
-  --color-fg: #101723; /** Primary text color on light backgrounds. */
-  --color-bg: #ffffff; /** Default page/surface background. */
-  --color-primary: #2563eb; /** Primary brand/interactive color. */
-  --color-primary-fg: #ffffff; /** Text/icon color for content placed on top of color-primary. */
-  --color-border: #d8dee5; /** Default border color for surfaces and controls. */
-  --color-surface: #f9fafc; /** Elevated surface background (cards, panels). */
-  --space-1: 4px; /** Smallest spacing unit. */
-  --space-2: 8px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-  --font-size-sm: 12px;
-  --font-size-md: 16px;
-  --font-size-lg: 24px;
-  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-weight-regular: 400;
-  --font-weight-bold: 700;
-  --shadow-sm: 0px 1px 3px 0px rgb(6% 9% 14%); /** Subtle elevation used for cards. */
-  --button-primary-background: var(--color-primary); /** Alias: primary button fill. */
-  --button-primary-foreground: var(--color-primary-fg); /** Alias: primary button text. */
-  --button-primary-border: var(--color-primary); /** Alias: primary button border. */
-  --button-primary-radius: var(--radius-md); /** Alias: primary button corner radius. */
-  --button-secondary-background: var(--color-bg); /** Alias: secondary button fill. */
-  --button-secondary-foreground: var(--color-fg); /** Alias: secondary button text. */
-  --button-secondary-border: var(--color-border); /** Alias: secondary button border. */
-  --card-default-background: var(--color-surface); /** Alias: default card fill. */
-  --card-default-border: var(--color-border); /** Alias: default card border. */
-  --card-default-radius: var(--radius-lg); /** Alias: default card corner radius. */
-}
-
-</style>
-<style>
-/* Utilities and components built exclusively from design token custom properties. */
-
-/* --- Buttons --- */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  padding: var(--space-2) var(--space-3);
-  border-width: 1px;
-  border-style: solid;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: var(--button-primary-background);
-  color: var(--button-primary-foreground);
-  border-color: var(--button-primary-border);
-  border-radius: var(--button-primary-radius);
-}
-
-.btn-secondary {
-  background-color: var(--button-secondary-background);
-  color: var(--button-secondary-foreground);
-  border-color: var(--button-secondary-border);
-  border-radius: var(--radius-md);
-}
-
-/* --- Card --- */
-
-.card {
-  background-color: var(--card-default-background);
-  border: 1px solid var(--card-default-border);
-  border-radius: var(--card-default-radius);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-sm);
-  font-family: var(--font-family-base);
-  color: var(--color-fg);
-}
-
-.card-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--space-2) 0;
-}
-
-.card-body {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-fg);
-}
-
-/* --- Chip --- */
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-regular);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
-  color: var(--color-fg);
-  border: 1px solid var(--color-border);
-}
-
-.chip-primary {
-  background-color: var(--button-primary-background);
-  color: var(--button-primary-foreground);
-  border-color: var(--button-primary-border);
-}
-
-/* --- Form controls --- */
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  font-family: var(--font-family-base);
-}
-
-.form-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-fg);
-}
-
-.form-input {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-fg);
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-2);
-}
-
-.form-input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 1px;
-}
-
-/* --- Spacing utilities --- */
-
-.stack-1 > * + * { margin-top: var(--space-1); }
-.stack-2 > * + * { margin-top: var(--space-2); }
-.stack-3 > * + * { margin-top: var(--space-3); }
-.stack-4 > * + * { margin-top: var(--space-4); }
-
-</style>
+<link rel="stylesheet" href="/api/projects/proj_2b38bd12/designs/tokens.css">
+<link rel="stylesheet" href="/api/projects/proj_2b38bd12/designs/prototype-utils.css">
 <style>
   /* Page-specific styles — tokens only, no hardcoded colors/fonts/radii. */
 
@@ -198,30 +44,37 @@
     pointer-events: none;
   }
 
-  /* --- Top app bar --- */
+  /* --- Top app bar ---
+     Colour pass: bolder brand-colour band per stakeholder feedback ("make colourful").
+     Uses only var(--color-primary)/var(--color-primary-fg) — the two colour tokens the
+     design system actually provides — never a hardcoded hex. See summary note re: pink. */
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
     padding: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-fg);
     flex-wrap: wrap;
   }
   .topbar-title {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     margin: 0;
+    color: var(--color-primary-fg);
   }
   .role-switcher {
     display: flex;
     align-items: center;
     gap: var(--space-2);
     font-size: var(--font-size-sm);
+    color: var(--color-primary-fg);
   }
   .role-switcher label {
     font-weight: var(--font-weight-bold);
+    color: var(--color-primary-fg);
   }
   .role-switcher select {
     min-height: 44px;
@@ -254,6 +107,7 @@
   .app-nav a.nav-item[aria-current="page"] {
     color: var(--color-primary);
     border-bottom-color: var(--color-primary);
+    background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
   }
   .main {
     flex: 1;
@@ -277,6 +131,7 @@
     .app-nav a.nav-item[aria-current="page"] {
       border-left-color: var(--color-primary);
       border-bottom-color: transparent;
+      background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
     }
     .main { padding: var(--space-4); }
   }
@@ -387,7 +242,13 @@
   }
   .placeholder-state .icon {
     font-size: calc(var(--font-size-lg) * 1.5);
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--space-4) * 2.5);
+    height: calc(var(--space-4) * 2.5);
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-bg));
     margin-bottom: var(--space-2);
   }
   .placeholder-state h2 {
