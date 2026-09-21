@@ -3,6 +3,7 @@ import { Role } from './roles';
 export interface DefectInput {
   title: string;
   assigneeId?: string;
+  reporterId?: string;
 }
 
 export type DefectStatus = 'New' | 'In Progress' | 'Fixed' | 'Closed' | "Won't Fix";
@@ -13,13 +14,13 @@ export interface Defect extends Omit<DefectInput, 'assigneeId'> {
 }
 
 export function createDefect(input: DefectInput, role: Role): Defect {
-  const { title, assigneeId } = input;
+  const { title, assigneeId, reporterId } = input;
 
   if (role === 'Admin') {
-    return { title, assigneeId, status: 'New' };
+    return { title, assigneeId, reporterId, status: 'New' };
   }
 
-  return { title, status: 'New' };
+  return { title, reporterId, status: 'New' };
 }
 
 export interface StatusChangeActor {
