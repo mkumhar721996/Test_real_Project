@@ -25,8 +25,9 @@ export function SummaryDashboard({
           setDefects(loaded);
         }
       },
-      () => {
+      (loadError) => {
         if (!cancelled) {
+          console.error('Failed to load summary dashboard defects', loadError);
           setError(true);
         }
       }
@@ -35,7 +36,7 @@ export function SummaryDashboard({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadDefects]);
 
   if (error) {
     return <p role="alert">Unable to load defect summary. Please try again later.</p>;

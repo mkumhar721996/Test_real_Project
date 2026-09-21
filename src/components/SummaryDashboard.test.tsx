@@ -88,3 +88,19 @@ test('restricts counts and trend to defects visible to a non-Admin role', async 
   expect(within(trend).getByText(/2026-09-18:\s*1/)).toBeInTheDocument();
   expect(within(trend).queryByText(/2026-09-18:\s*2/)).not.toBeInTheDocument();
 });
+
+test('includes defects a non-Admin reported even when unassigned', async () => {
+  const defects: DefectRecord[] = [
+    { title: 'Reported by me', reporterId: 'user-1', status: 'Open', createdAt: '2026-09-18' },
+    { title: 'Reported by someone else', reporterId: 'user-2', status: 'Open', createdAt: '2026-09-18' },
+  ];
+  render(
+    <SummaryDashboard
+      role="Reporter"
+      currentUserId="user-1"
+      loadDefects={() => Promise.resolve(defects)}
+    />
+  );
+  expect(await screen.findByText(/open:\s*1/i)).toBeInTheDocument();
+  expect(screen.getByText(/closed:\s*0/i)).toBeInTheDocument();
+});
