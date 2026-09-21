@@ -59,6 +59,17 @@ test('shows an empty state for the trend chart when there are no defects', async
   expect(screen.queryByLabelText(/defect trend/i)).not.toBeInTheDocument();
 });
 
+test('shows an error message when loading defects fails', async () => {
+  render(
+    <SummaryDashboard
+      role="Admin"
+      currentUserId="user-1"
+      loadDefects={() => Promise.reject(new Error('network error'))}
+    />
+  );
+  expect(await screen.findByRole('alert')).toHaveTextContent(/unable to load defect summary/i);
+});
+
 test('restricts counts and trend to defects visible to a non-Admin role', async () => {
   const defects: DefectRecord[] = [
     { title: 'Mine', assigneeId: 'user-1', status: 'Open', createdAt: '2026-09-18' },

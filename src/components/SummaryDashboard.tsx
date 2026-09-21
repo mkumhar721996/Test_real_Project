@@ -14,20 +14,32 @@ export function SummaryDashboard({
   loadDefects,
 }: SummaryDashboardProps): JSX.Element {
   const [defects, setDefects] = useState<DefectRecord[] | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
-    loadDefects().then((loaded) => {
-      if (!cancelled) {
-        setDefects(loaded);
+    loadDefects().then(
+      (loaded) => {
+        if (!cancelled) {
+          setDefects(loaded);
+        }
+      },
+      () => {
+        if (!cancelled) {
+          setError(true);
+        }
       }
-    });
+    );
 
     return () => {
       cancelled = true;
     };
-  }, [loadDefects]);
+  }, []);
+
+  if (error) {
+    return <p role="alert">Unable to load defect summary. Please try again later.</p>;
+  }
 
   if (defects === null) {
     return <p role="status">Loading summary…</p>;
