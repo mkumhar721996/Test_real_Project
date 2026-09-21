@@ -27,7 +27,9 @@ export function visibleDefects(
     return defects;
   }
 
-  return defects.filter((defect) => defect.assigneeId === currentUserId);
+  return defects.filter(
+    (defect) => defect.assigneeId === currentUserId || defect.reporterId === currentUserId
+  );
 }
 
 export function countByStatus(defects: DefectRecord[]): DefectCounts {

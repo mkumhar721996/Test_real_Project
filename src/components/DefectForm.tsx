@@ -4,16 +4,19 @@ import { Defect, createDefect } from '../domain/defect';
 
 export interface DefectFormProps {
   role: Role;
+  currentUserId: string;
   onSubmit: (defect: Defect) => void;
 }
 
-export function DefectForm({ role, onSubmit }: DefectFormProps): JSX.Element {
+export function DefectForm({ role, currentUserId, onSubmit }: DefectFormProps): JSX.Element {
   const [title, setTitle] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onSubmit(createDefect({ title, assigneeId: assigneeId || undefined }, role));
+    onSubmit(
+      createDefect({ title, assigneeId: assigneeId || undefined, reporterId: currentUserId }, role)
+    );
   }
 
   return (

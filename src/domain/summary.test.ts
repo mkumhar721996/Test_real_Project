@@ -38,3 +38,17 @@ test('Admin sees all defects; other roles see only their assigned defects', () =
   expect(visibleDefects(defects, 'Developer', 'user-1')).toEqual([defects[0]]);
   expect(visibleDefects(defects, 'Reporter', 'user-1')).toEqual([defects[0]]);
 });
+
+test('non-Admins see defects they reported even when unassigned', () => {
+  const defects: DefectRecord[] = [
+    { title: 'Reported by me', reporterId: 'user-1', status: 'Open', createdAt: '2026-09-18' },
+    {
+      title: 'Reported by someone else',
+      reporterId: 'user-2',
+      status: 'Open',
+      createdAt: '2026-09-18',
+    },
+  ];
+  expect(visibleDefects(defects, 'Reporter', 'user-1')).toEqual([defects[0]]);
+  expect(visibleDefects(defects, 'Developer', 'user-1')).toEqual([defects[0]]);
+});

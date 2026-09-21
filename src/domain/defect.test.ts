@@ -19,6 +19,14 @@ test.each(['Reporter', 'Developer'] as const)(
   }
 );
 
+test.each(['Reporter', 'Developer', 'Admin'] as const)(
+  'keeps reporterId regardless of creator role (%s)',
+  (role) => {
+    const defect = createDefect({ title: 'Bug', reporterId: 'user-7' }, role);
+    expect(defect.reporterId).toBe('user-7');
+  }
+);
+
 test('new defects start in New status', () => {
   const defect = createDefect({ title: 'Bug' }, 'Reporter');
   expect(defect.status).toBe('New');
