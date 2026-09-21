@@ -64,3 +64,19 @@ test('AC5: editing an existing employee updates the list', () => {
   fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
   expect(screen.getByText('Senior HR Coordinator')).toBeInTheDocument();
 });
+
+test('security: a non-HR-Admin sees an access-denied panel instead of the edit form', () => {
+  render(<EmployeeManager role="Manager" initialEmployees={[priyaFixture()]} />);
+  fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+  expect(screen.getByText(/you don't have permission to edit employee records/i)).toBeInTheDocument();
+  expect(screen.queryByLabelText(/job title/i)).not.toBeInTheDocument();
+});
+
+test('security: a non-HR-Admin cannot modify an employee record even if the edit form were reached', () => {
+  const existing = priyaFixture();
+  render(<EmployeeManager role="Manager" initialEmployees={[existing]} />);
+  fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+  fireEvent.click(screen.getByRole('button', { name: /back to employee list/i }));
+  expect(screen.getByText('Priya Natarajan')).toBeInTheDocument();
+  expect(screen.getByText('HR Coordinator')).toBeInTheDocument();
+});

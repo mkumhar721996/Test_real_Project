@@ -64,7 +64,11 @@ export function createEmployee(
   return { ...input, id: nextEmployeeId(existingEmployees), badge: 'New' };
 }
 
-export function updateEmployee(existing: Employee, input: EmployeeInput): Employee {
+export function updateEmployee(existing: Employee, input: EmployeeInput, role: EmployeeRole): Employee {
+  if (role !== 'HR Admin') {
+    throw new EmployeeAccessDeniedError('Editing employee records requires the HR Admin role.');
+  }
+
   const errors = validateEmployeeInput(input);
   if (errors.length > 0) {
     throw new EmployeeValidationError(errors);

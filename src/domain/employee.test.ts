@@ -66,7 +66,11 @@ test('AC4: access is denied before validation runs for a non-HR-Admin', () => {
 
 test('AC5: editing an existing employee persists the updated fields', () => {
   const existing: Employee = { id: 'EMP-1001', ...validInput(), badge: undefined };
-  const updated = updateEmployee(existing, { ...validInput(), jobTitle: 'Senior Support Specialist' });
+  const updated = updateEmployee(
+    existing,
+    { ...validInput(), jobTitle: 'Senior Support Specialist' },
+    'HR Admin'
+  );
   expect(updated.jobTitle).toBe('Senior Support Specialist');
   expect(updated.id).toBe('EMP-1001');
   expect(updated.badge).toBe('Updated');
@@ -74,7 +78,22 @@ test('AC5: editing an existing employee persists the updated fields', () => {
 
 test('AC5: updateEmployee rejects a missing required field', () => {
   const existing: Employee = { id: 'EMP-1001', ...validInput() };
-  expect(() => updateEmployee(existing, { ...validInput(), firstName: '' })).toThrow(
-    EmployeeValidationError
+  expect(() =>
+    updateEmployee(existing, { ...validInput(), firstName: '' }, 'HR Admin')
+  ).toThrow(EmployeeValidationError);
+});
+
+test('security: a non-HR-Admin cannot update an existing employee record', () => {
+  const existing: Employee = { id: 'EMP-1001', ...validInput() };
+  expect(() =>
+    updateEmployee(existing, { ...validInput(), jobTitle: 'Hacked Title' }, 'Manager')
+  ).toThrow(EmployeeAccessDeniedError);
+});
+
+test('security: access is denied before validation runs for a non-HR-Admin update', () => {
+  const existing: Employee = { id: 'EMP-1001', ...validInput() };
+  const invalidInput = { ...validInput(), firstName: '' };
+  expect(() => updateEmployee(existing, invalidInput, 'Manager')).toThrow(
+    EmployeeAccessDeniedError
   );
 });
