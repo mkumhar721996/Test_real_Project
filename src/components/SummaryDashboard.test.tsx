@@ -104,3 +104,45 @@ test('includes defects a non-Admin reported even when unassigned', async () => {
   expect(await screen.findByText(/open:\s*1/i)).toBeInTheDocument();
   expect(screen.getByText(/closed:\s*0/i)).toBeInTheDocument();
 });
+
+test('refetches when the viewing user changes, avoiding stale data', async () => {
+  const loadDefectsForUser1 = jest.fn(() =>
+    Promise.resolve([{ title: 'A', status: 'Open', createdAt: '2026-09-18' }] as DefectRecord[])
+  );
+  const loadDefectsForUser2 = jest.fn(() =>
+    Promise.resolve([
+      { title: 'B', status: 'Open', createdAt: '2026-09-18' },
+      { title: 'C', status: 'Closed', createdAt: '2026-09-18' },
+    ] as DefectRecord[])
+  );
+
+  const { rerender } = render(
+    <SummaryDashboard role="Admin" currentUserId="user-1" loadDefects={loadDefectsForUser1} />
+  );
+  expect(await screen.findByText(/open:\s*1/i)).toBeInTheDocument();
+
+  rerender(
+    <SummaryDashboard role="Admin" currentUserId="user-2" loadDefects={loadDefectsForUser2} />
+  );
+  expect(await screen.findByText(/open:\s*2/i)).toBeInTheDocument();
+  expect(screen.getByText(/closed:\s*1/i)).toBeInTheDocument();
+  expect(loadDefectsForUser2).toHaveBeenCalledTimes(1);
+});
+
+test('does not refetch on re-render when only the loadDefects reference changes', async () => {
+  const loadDefects = jest.fn(() => Promise.resolve([] as DefectRecord[]));
+
+  const { rerender } = render(
+    <SummaryDashboard role="Admin" currentUserId="user-1" loadDefects={loadDefects} />
+  );
+  expect(await screen.findByText(/open:\s*0/i)).toBeInTheDocument();
+  expect(loadDefects).toHaveBeenCalledTimes(1);
+
+  const newUnmemoizedLoadDefects = jest.fn(() => Promise.resolve([] as DefectRecord[]));
+  rerender(
+    <SummaryDashboard role="Admin" currentUserId="user-1" loadDefects={newUnmemoizedLoadDefects} />
+  );
+
+  expect(loadDefects).toHaveBeenCalledTimes(1);
+  expect(newUnmemoizedLoadDefects).not.toHaveBeenCalled();
+});

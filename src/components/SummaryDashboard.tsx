@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Role } from '../domain/roles';
 import { countByStatus, dailyTrend, DefectRecord, visibleDefects } from '../domain/summary';
 
@@ -16,10 +16,13 @@ export function SummaryDashboard({
   const [defects, setDefects] = useState<DefectRecord[] | null>(null);
   const [error, setError] = useState(false);
 
+  const loadDefectsRef = useRef(loadDefects);
+  loadDefectsRef.current = loadDefects;
+
   useEffect(() => {
     let cancelled = false;
 
-    loadDefects().then(
+    loadDefectsRef.current().then(
       (loaded) => {
         if (!cancelled) {
           setDefects(loaded);
@@ -36,7 +39,7 @@ export function SummaryDashboard({
     return () => {
       cancelled = true;
     };
-  }, [loadDefects]);
+  }, [role, currentUserId]);
 
   if (error) {
     return <p role="alert">Unable to load defect summary. Please try again later.</p>;
