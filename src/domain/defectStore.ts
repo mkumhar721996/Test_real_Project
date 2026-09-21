@@ -1,4 +1,5 @@
 import { Defect } from './defect';
+import { Role } from './roles';
 
 export interface StoredDefect extends Defect {
   id: string;
@@ -21,7 +22,10 @@ export function getDefectById(id: string): StoredDefect | undefined {
   return defects.find((d) => d.id === id);
 }
 
-export function deleteDefect(id: string): void {
+export function deleteDefect(id: string, role: Role): void {
+  if (role !== 'Admin') {
+    throw new Error('Only admins can delete defects');
+  }
   defects = defects.filter((d) => d.id !== id);
 }
 
