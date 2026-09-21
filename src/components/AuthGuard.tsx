@@ -15,7 +15,7 @@ export function AuthGuard({
     if (!isAuthenticated) {
       onUnauthenticated();
     }
-  }, [isAuthenticated, onUnauthenticated]);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return null;
