@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TEST-REAL-PROJECT-STORY-021 — Employee Records — Design Prototype</title>
+<link rel="stylesheet" href="/api/projects/proj_2b38bd12/designs/tokens.css">
+<link rel="stylesheet" href="/api/projects/proj_2b38bd12/designs/prototype-utils.css">
+<style>
+  /* Page-specific styles — tokens only, no hardcoded colors/fonts/radii. */
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-family-base);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* --- Reviewer bar --- */
+  #review-bar button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+  }
+  #review-bar button:disabled {
+    color: var(--color-border);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* --- Top app bar ---
+     Colour pass: bolder brand-colour band per stakeholder feedback ("make colourful").
+     Uses only var(--color-primary)/var(--color-primary-fg) — the two colour tokens the
+     design system actually provides — never a hardcoded hex. See summary note re: pink. */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-fg);
+    flex-wrap: wrap;
+  }
+  .topbar-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+    color: var(--color-primary-fg);
+  }
+  .role-switcher {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-primary-fg);
+  }
+  .role-switcher label {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-fg);
+  }
+  .role-switcher select {
+    min-height: 44px;
+  }
+
+  /* --- App shell: nav + main (mobile-first: stacked, nav becomes horizontal tabs) --- */
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+  }
+  .app-nav {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+  .app-nav a.nav-item {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-fg);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .app-nav a.nav-item[aria-current="page"] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
+  }
+  .main {
+    flex: 1;
+    padding: var(--space-3);
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .app-shell { flex-direction: row; }
+    .app-nav {
+      flex-direction: column;
+      width: 200px;
+      border-bottom: none;
+      border-right: 1px solid var(--color-border);
+      flex: 0 0 auto;
+    }
+    .app-nav a.nav-item {
+      border-bottom: none;
+      border-left: 3px solid transparent;
+    }
+    .app-nav a.nav-item[aria-current="page"] {
+      border-left-color: var(--color-primary);
+      border-bottom-color: transparent;
+      background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
+    }
+    .main { padding: var(--space-4); }
+  }
+
+  /* --- Screens --- */
+  .screen-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+  .screen-heading h1 {
+    font-size: var(--font-size-lg);
+    margin: 0;
+  }
+  .screen-subtitle {
+    color: var(--color-fg);
+    font-size: var(--font-size-sm);
+    margin: var(--space-1) 0 0 0;
+  }
+
+  /* --- List-state preview toggle (review aid, not production UI) --- */
+  .state-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+  }
+  .state-preview span.label {
+    font-weight: var(--font-weight-bold);
+  }
+  .state-preview button {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    padding: var(--space-1) var(--space-2);
+    min-height: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    cursor: pointer;
+  }
+  .state-preview button[aria-pressed="true"] {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-foreground);
+    border-color: var(--button-primary-border);
+  }
+
+  /* --- Table --- */
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  table.employee-table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--font-size-md);
+  }
+  table.employee-table caption {
+    text-align: left;
+  }
+  table.employee-table th,
+  table.employee-table td {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  table.employee-table thead th {
+    background-color: var(--color-surface);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+  }
+  table.employee-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  table.employee-table tbody tr.row-flash {
+    animation: row-flash 1.6s ease-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    table.employee-table tbody tr.row-flash { animation: none; }
+  }
+  @keyframes row-flash {
+    0% { background-color: var(--color-surface); }
+    100% { background-color: transparent; }
+  }
+  .name-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  /* --- Empty / error / loading states --- */
+  .placeholder-state {
+    text-align: center;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .placeholder-state .icon {
+    font-size: calc(var(--font-size-lg) * 1.5);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--space-4) * 2.5);
+    height: calc(var(--space-4) * 2.5);
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-bg));
+    margin-bottom: var(--space-2);
+  }
+  .placeholder-state h2 {
+    font-size: var(--font-size-md);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .placeholder-state p {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-fg);
+  }
+
+  .skeleton-row {
+    height: 20px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    margin-bottom: var(--space-2);
+    background-image: linear-gradient(90deg, var(--color-surface) 25%, var(--color-bg) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-row { animation: none; }
+  }
+  @keyframes shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+  .skeleton-block { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
+
+  /* --- Forms --- */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  @media (min-width: 640px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid .form-field.full-width { grid-column: 1 / -1; }
+  }
+  select.form-input { min-height: 44px; }
+  input.form-input { min-height: 44px; }
+  .required-mark { color: var(--color-fg); font-weight: var(--font-weight-bold); }
+  .field-hint {
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+  }
+  .form-field.has-error .form-label {
+    text-decoration: underline;
+  }
+  .form-field.has-error .form-input {
+    border-width: 2px;
+    border-color: var(--color-fg);
+  }
+  .field-error-text {
+    display: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+  }
+  .form-field.has-error .field-error-text {
+    display: block;
+  }
+  .form-error-banner {
+    display: none;
+    border: 2px solid var(--color-fg);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .form-error-banner.visible { display: block; }
+  .form-error-banner h2 {
+    font-size: var(--font-size-md);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .form-error-banner p { margin: 0; }
+  .form-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .linklike {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    padding: var(--space-1);
+    min-height: 44px;
+  }
+
+  /* --- Access denied panel --- */
+  .access-denied {
+    display: none;
+    text-align: center;
+    padding: var(--space-4);
+    border: 2px solid var(--color-fg);
+    border-radius: var(--radius-md);
+  }
+  .access-denied.visible { display: block; }
+  .access-denied .icon {
+    font-size: calc(var(--font-size-lg) * 1.5);
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+  .access-denied h2 {
+    font-size: var(--font-size-md);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .access-denied p { margin: 0 0 var(--space-3) 0; }
+
+  /* --- Toast --- */
+  #toast {
+    position: fixed;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    z-index: 10000;
+    max-width: 340px;
+    display: none;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  #toast.visible { display: flex; }
+  #toast .icon { font-size: var(--font-size-md); }
+  #toast p { margin: 0; font-size: var(--font-size-sm); }
+  #toast button { margin-left: auto; }
+
+  .lock-note {
+    font-size: var(--font-size-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+</style>
+</head>
+<body>
+
+<!-- App nav: left sidebar (top tabs on narrow viewports) — Employees · Settings. Employees is the only implemented section for this story; Settings is a non-interactive placeholder shown only to establish the app's information architecture. -->
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:var(--font-family-base);color:var(--color-fg);font-weight:var(--font-weight-bold)">TEST-REAL-PROJECT-STORY-021</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<!-- Fixture data: initial employee records -->
+<script id="fixture-data" type="application/json">
+[
+  {
+    "id": "EMP-1001",
+    "firstName": "Priya",
+    "lastName": "Natarajan",
+    "email": "priya.natarajan@peoplehub.com",
+    "department": "People Operations",
+    "jobTitle": "HR Coordinator",
+    "employmentType": "Full-time",
+    "manager": "Dana Okafor",
+    "startDate": "2023-03-06",
+    "badge": null
+  },
+  {
+    "id": "EMP-1002",
+    "firstName": "Marcus",
+    "lastName": "Webb",
+    "email": "marcus.webb@peoplehub.com",
+    "department": "Engineering",
+    "jobTitle": "Software Engineer II",
+    "employmentType": "Full-time",
+    "manager": "Elena Vasquez",
+    "startDate": "2022-11-14",
+    "badge": null
+  },
+  {
+    "id": "EMP-1003",
+    "firstName": "Sofia",
+    "lastName": "Reyes",
+    "email": "sofia.reyes@peoplehub.com",
+    "department": "Finance",
+    "jobTitle": "Financial Analyst",
+    "employmentType": "Full-time",
+    "manager": "Tom Lindqvist",
+    "startDate": "2024-01-22",
+    "badge": null
+  }
+]
+</script>
+
+<div class="topbar">
+  <p class="topbar-title">PeopleHub HR</p>
+  <div class="role-switcher">
+    <label for="role-select">Signed in as</label>
+    <select id="role-select" class="form-input">
+      <option value="admin">Priya Natarajan — HR Admin</option>
+      <option value="manager">Elena Vasquez — Engineering Manager</option>
+    </select>
+  </div>
+</div>
+
+<div class="app-shell">
+  <nav class="app-nav" aria-label="Primary">
+    <a href="#" class="nav-item" aria-current="page">Employees</a>
+    <a href="#" class="nav-item" aria-disabled="true" title="Not part of this story" onclick="return false;">Settings</a>
+  </nav>
+
+  <main class="main">
+    <div id="screens">
+
+      <!--
+        Screen: Employee List
+        Notes:
+          - "Simulate list state" row is a review aid only (not shipped UI) so the reviewer can inspect
+            loading/empty/error/success without needing live data — see UI guideline §5.
+          - Non-HR-Admin roles still see "+ Add employee"; clicking it routes to the Add Employee screen,
+            which is where the actual permission denial (AC4) is shown — this mirrors a real backend check
+            and covers users who deep-link straight to the create screen.
+          - The row for a just-created or just-edited employee gets a brief background flash + a
+            "New"/"Updated" chip so AC3 and AC5 are visible at a glance, not just implied.
+      -->
+      <div class="screen" data-name="Employee List">
+        <div class="screen-heading">
+          <div>
+            <h1>Employees</h1>
+            <p class="screen-subtitle">Employee records at PeopleHub HR.</p>
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary" id="add-employee-btn" onclick="goToScreen('Add Employee')">+ Add employee</button>
+            <span class="lock-note" id="lock-note" style="display:none;" title="Requires HR Admin permission">🔒 HR Admin required</span>
+          </div>
+        </div>
+
+        <div class="state-preview">
+          <span class="label">Simulate list state (review aid):</span>
+          <button type="button" data-list-state="loading" aria-pressed="false" onclick="setListState('loading')">Loading</button>
+          <button type="button" data-list-state="empty" aria-pressed="false" onclick="setListState('empty')">Empty</button>
+          <button type="button" data-list-state="success" aria-pressed="true" onclick="setListState('success')">Populated</button>
+          <button type="button" data-list-state="error" aria-pressed="false" onclick="setListState('error')">Error</button>
+        </div>
+
+        <!-- State: loading -->
+        <div class="skeleton-block" data-list-panel="loading" style="display:none;" aria-hidden="true">
+          <div class="skeleton-row" style="width:100%;"></div>
+          <div class="skeleton-row" style="width:90%;"></div>
+          <div class="skeleton-row" style="width:95%;"></div>
+          <div class="skeleton-row" style="width:80%;"></div>
+        </div>
+
+        <!-- State: empty -->
+        <div class="placeholder-state" data-list-panel="empty" style="display:none;">
+          <span class="icon" aria-hidden="true">🗂️</span>
+          <h2>No employees yet</h2>
+          <p>Create your first employee record to get started.</p>
+          <button type="button" class="btn btn-primary" onclick="goToScreen('Add Employee')">+ Add employee</button>
+        </div>
+
+        <!-- State: error -->
+        <div class="placeholder-state" data-list-panel="error" style="display:none;">
+          <span class="icon" aria-hidden="true">⚠️</span>
+          <h2>Couldn't load employees</h2>
+          <p>Something went wrong loading the employee list. Try again.</p>
+          <button type="button" class="btn btn-secondary" onclick="setListState('success')">Retry</button>
+        </div>
+
+        <!-- State: success (populated) -->
+        <div class="table-scroll" data-list-panel="success">
+          <table class="employee-table">
+            <caption class="visually-hidden">Employee records</caption>
+            <thead>
+              <tr>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Department</th>
+                <th scope="col">Job title</th>
+                <th scope="col">Start date</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employee-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!--
+        Screen: Add Employee
+        Notes:
+          - AC1: submitting with all required fields filled creates the record and returns to the list.
+          - AC2: submitting with any required field blank shows an inline error under that field plus a
+            summary banner; entered values in other fields are preserved (nothing is cleared or reset).
+          - AC4: when the signed-in role is not HR Admin, this screen shows an access-denied panel instead
+            of the form — try switching "Signed in as" to "Elena Vasquez — Engineering Manager" above.
+          - "Fill with sample data" is a review aid to speed up exercising the happy path; it is not part
+            of the shipped form.
+      -->
+      <div class="screen" data-name="Add Employee">
+        <div class="screen-heading">
+          <div>
+            <h1>Add employee</h1>
+            <p class="screen-subtitle">Fields marked <span class="required-mark">*</span> are required.</p>
+          </div>
+        </div>
+
+        <!-- State: access denied (AC4) -->
+        <div class="access-denied" id="add-access-denied">
+          <span class="icon" aria-hidden="true">🚫</span>
+          <h2>You don't have permission to create employee records</h2>
+          <p>Creating employee records requires the HR Admin role. Your current role is Engineering Manager.</p>
+          <button type="button" class="btn btn-secondary" onclick="goToScreen('Employee List')">Back to employee list</button>
+        </div>
+
+        <!-- State: blank form (AC1 happy path) / validation error (AC2) -->
+        <div id="add-form-wrapper">
+          <div class="form-error-banner" id="add-error-banner">
+            <h2>Couldn't create employee</h2>
+            <p>Fix the highlighted field(s) below and try again.</p>
+          </div>
+
+          <form id="add-employee-form" novalidate>
+            <div class="form-grid">
+              <div class="form-field" data-field="firstName">
+                <label class="form-label" for="add-firstName">First name <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-firstName" name="firstName" type="text" autocomplete="given-name" aria-describedby="add-firstName-error">
+                <span class="field-error-text" id="add-firstName-error">First name is required.</span>
+              </div>
+              <div class="form-field" data-field="lastName">
+                <label class="form-label" for="add-lastName">Last name <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-lastName" name="lastName" type="text" autocomplete="family-name" aria-describedby="add-lastName-error">
+                <span class="field-error-text" id="add-lastName-error">Last name is required.</span>
+              </div>
+              <div class="form-field full-width" data-field="email">
+                <label class="form-label" for="add-email">Work email <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-email" name="email" type="email" autocomplete="email" aria-describedby="add-email-error">
+                <span class="field-error-text" id="add-email-error">Work email is required.</span>
+              </div>
+              <div class="form-field" data-field="department">
+                <label class="form-label" for="add-department">Department <span class="required-mark">*</span></label>
+                <select class="form-input" id="add-department" name="department" aria-describedby="add-department-error">
+                  <option value="">Select a department</option>
+                  <option>People Operations</option>
+                  <option>Engineering</option>
+                  <option>Finance</option>
+                  <option>Sales</option>
+                  <option>Marketing</option>
+                  <option>Customer Success</option>
+                </select>
+                <span class="field-error-text" id="add-department-error">Department is required.</span>
+              </div>
+              <div class="form-field" data-field="jobTitle">
+                <label class="form-label" for="add-jobTitle">Job title <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-jobTitle" name="jobTitle" type="text" aria-describedby="add-jobTitle-error">
+                <span class="field-error-text" id="add-jobTitle-error">Job title is required.</span>
+              </div>
+              <div class="form-field" data-field="startDate">
+                <label class="form-label" for="add-startDate">Start date <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-startDate" name="startDate" type="date" aria-describedby="add-startDate-error">
+                <span class="field-error-text" id="add-startDate-error">Start date is required.</span>
+              </div>
+              <div class="form-field" data-field="employmentType">
+                <label class="form-label" for="add-employmentType">Employment type</label>
+                <select class="form-input" id="add-employmentType" name="employmentType">
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Contract</option>
+                </select>
+              </div>
+              <div class="form-field" data-field="manager">
+                <label class="form-label" for="add-manager">Manager</label>
+                <input class="form-input" id="add-manager" name="manager" type="text">
+                <span class="field-hint">Optional</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="add-submit-btn">Create employee</button>
+              <button type="button" class="btn btn-secondary" onclick="goToScreen('Employee List')">Cancel</button>
+              <button type="button" class="linklike" onclick="fillSampleData('add')">Fill with sample data</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!--
+        Screen: Edit Employee
+        Notes:
+          - AC5: changing any field and saving updates the record in place; the employee list reflects the
+            new values immediately and the row briefly flashes with an "Updated" chip.
+          - Same validation rules as Add Employee apply — clearing a required field and saving shows the
+            same inline error pattern.
+      -->
+      <div class="screen" data-name="Edit Employee">
+        <div class="screen-heading">
+          <div>
+            <h1>Edit employee</h1>
+            <p class="screen-subtitle" id="edit-subtitle">Fields marked <span class="required-mark">*</span> are required.</p>
+          </div>
+        </div>
+
+        <div class="form-error-banner" id="edit-error-banner">
+          <h2>Couldn't save changes</h2>
+          <p>Fix the highlighted field(s) below and try again.</p>
+        </div>
+
+        <form id="edit-employee-form" novalidate>
+          <div class="form-grid">
+            <div class="form-field" data-field="firstName">
+              <label class="form-label" for="edit-firstName">First name <span class="required-mark">*</span></label>
+              <input class="form-input" id="edit-firstName" name="firstName" type="text" autocomplete="given-name" aria-describedby="edit-firstName-error">
+              <span class="field-error-text" id="edit-firstName-error">First name is required.</span>
+            </div>
+            <div class="form-field" data-field="lastName">
+              <label class="form-label" for="edit-lastName">Last name <span class="required-mark">*</span></label>
+              <input class="form-input" id="edit-lastName" name="lastName" type="text" autocomplete="family-name" aria-describedby="edit-lastName-error">
+              <span class="field-error-text" id="edit-lastName-error">Last name is required.</span>
+            </div>
+            <div class="form-field full-width" data-field="email">
+              <label class="form-label" for="edit-email">Work email <span class="required-mark">*</span></label>
+              <input class="form-input" id="edit-email" name="email" type="email" autocomplete="email" aria-describedby="edit-email-error">
+              <span class="field-error-text" id="edit-email-error">Work email is required.</span>
+            </div>
+            <div class="form-field" data-field="department">
+              <label class="form-label" for="edit-department">Department <span class="required-mark">*</span></label>
+              <select class="form-input" id="edit-department" name="department" aria-describedby="edit-department-error">
+                <option value="">Select a department</option>
+                <option>People Operations</option>
+                <option>Engineering</option>
+                <option>Finance</option>
+                <option>Sales</option>
+                <option>Marketing</option>
+                <option>Customer Success</option>
+              </select>
+              <span class="field-error-text" id="edit-department-error">Department is required.</span>
+            </div>
+            <div class="form-field" data-field="jobTitle">
+              <label class="form-label" for="edit-jobTitle">Job title <span class="required-mark">*</span></label>
+              <input class="form-input" id="edit-jobTitle" name="jobTitle" type="text" aria-describedby="edit-jobTitle-error">
+              <span class="field-error-text" id="edit-jobTitle-error">Job title is required.</span>
+            </div>
+            <div class="form-field" data-field="startDate">
+              <label class="form-label" for="edit-startDate">Start date <span class="required-mark">*</span></label>
+              <input class="form-input" id="edit-startDate" name="startDate" type="date" aria-describedby="edit-startDate-error">
+              <span class="field-error-text" id="edit-startDate-error">Start date is required.</span>
+            </div>
+            <div class="form-field" data-field="employmentType">
+              <label class="form-label" for="edit-employmentType">Employment type</label>
+              <select class="form-input" id="edit-employmentType" name="employmentType">
+                <option>Full-time</option>
+                <option>Part-time</option>
+                <option>Contract</option>
+              </select>
+            </div>
+            <div class="form-field" data-field="manager">
+              <label class="form-label" for="edit-manager">Manager</label>
+              <input class="form-input" id="edit-manager" name="manager" type="text">
+              <span class="field-hint">Optional</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="edit-submit-btn">Save changes</button>
+            <button type="button" class="btn btn-secondary" onclick="goToScreen('Employee List')">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast" role="status" aria-live="polite">
+  <div class="card" style="display:flex; align-items:flex-start; gap:var(--space-2);">
+    <span class="icon" aria-hidden="true">✅</span>
+    <p id="toast-text"></p>
+    <button type="button" class="linklike" onclick="hideToast()" aria-label="Dismiss notification">✕</button>
+  </div>
+</div>
+
+<script>
+  // ---- Fixture data ----
+  const employees = JSON.parse(document.getElementById('fixture-data').textContent);
+  let nextIdNumber = 1004;
+  let currentRole = 'admin';
+  let editingId = null;
+
+  // ---- Reviewer bar (canonical scaffold) ----
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' && !isTypingTarget(e.target)) show(cur + 1);
+    if (e.key === 'ArrowLeft' && !isTypingTarget(e.target)) show(cur - 1);
+  });
+  function isTypingTarget(el) {
+    return el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA');
+  }
+
+  function goToScreen(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+    if (name === 'Add Employee') refreshAddAccess();
+  }
+
+  // ---- Role switching (AC4) ----
+  document.getElementById('role-select').addEventListener('change', (e) => {
+    currentRole = e.target.value;
+    document.getElementById('lock-note').style.display = currentRole === 'admin' ? 'none' : 'inline-flex';
+    refreshAddAccess();
+  });
+
+  function refreshAddAccess() {
+    const denied = document.getElementById('add-access-denied');
+    const formWrapper = document.getElementById('add-form-wrapper');
+    const isAdmin = currentRole === 'admin';
+    denied.classList.toggle('visible', !isAdmin);
+    formWrapper.style.display = isAdmin ? 'block' : 'none';
+  }
+
+  // ---- List state preview (review aid) ----
+  function setListState(state) {
+    document.querySelectorAll('[data-list-panel]').forEach(el => {
+      el.style.display = el.dataset.listPanel === state ? 'block' : 'none';
+    });
+    document.querySelectorAll('[data-list-state]').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.listState === state ? 'true' : 'false');
+    });
+    if (state === 'success') renderTable();
+  }
+
+  // ---- Table rendering ----
+  function formatDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function renderTable(flashId) {
+    const tbody = document.getElementById('employee-tbody');
+    tbody.innerHTML = '';
+    employees.forEach(emp => {
+      const tr = document.createElement('tr');
+      if (flashId && emp.id === flashId) tr.classList.add('row-flash');
+      const badgeHtml = emp.badge ? `<span class="chip chip-primary">${emp.badge}</span>` : '';
+      tr.innerHTML = `
+        <td>${emp.id}</td>
+        <td><div class="name-cell"><span>${emp.firstName} ${emp.lastName}</span>${badgeHtml}</div></td>
+        <td>${emp.department}</td>
+        <td>${emp.jobTitle}</td>
+        <td>${formatDate(emp.startDate)}</td>
+        <td><button type="button" class="btn btn-secondary" onclick="openEdit('${emp.id}')">Edit</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ---- Toast ----
+  let toastTimer = null;
+  function showToast(message) {
+    document.getElementById('toast-text').textContent = message;
+    const toast = document.getElementById('toast');
+    toast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 4000);
+  }
+  function hideToast() {
+    document.getElementById('toast').classList.remove('visible');
+  }
+
+  // ---- Sample data helper (review aid) ----
+  function fillSampleData(prefix) {
+    document.getElementById(`${prefix}-firstName`).value = 'Jordan';
+    document.getElementById(`${prefix}-lastName`).value = 'Blake';
+    document.getElementById(`${prefix}-email`).value = 'jordan.blake@peoplehub.com';
+    document.getElementById(`${prefix}-department`).value = 'Customer Success';
+    document.getElementById(`${prefix}-jobTitle`).value = 'Support Specialist';
+    document.getElementById(`${prefix}-startDate`).value = '2026-09-21';
+    document.getElementById(`${prefix}-employmentType`).value = 'Full-time';
+    document.getElementById(`${prefix}-manager`).value = 'Dana Okafor';
+  }
+
+  // ---- Validation ----
+  const requiredFields = ['firstName', 'lastName', 'email', 'department', 'jobTitle', 'startDate'];
+
+  function validateForm(prefix) {
+    let firstInvalid = null;
+    const errors = [];
+    requiredFields.forEach(field => {
+      const input = document.getElementById(`${prefix}-${field}`);
+      const wrapper = input.closest('.form-field');
+      const isEmpty = input.value.trim() === '';
+      wrapper.classList.toggle('has-error', isEmpty);
+      input.setAttribute('aria-invalid', isEmpty ? 'true' : 'false');
+      if (isEmpty) {
+        errors.push(field);
+        if (!firstInvalid) firstInvalid = input;
+      }
+    });
+    if (firstInvalid) firstInvalid.focus();
+    return errors;
+  }
+
+  // ---- Add Employee (AC1 + AC2) ----
+  document.getElementById('add-employee-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (currentRole !== 'admin') return; // AC4 — denied before reaching validation/submit
+    const errors = validateForm('add');
+    const banner = document.getElementById('add-error-banner');
+    if (errors.length > 0) {
+      banner.classList.add('visible');
+      return;
+    }
+    banner.classList.remove('visible');
+
+    const submitBtn = document.getElementById('add-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating employee…';
+
+    const newEmployee = {
+      id: `EMP-${nextIdNumber++}`,
+      firstName: document.getElementById('add-firstName').value.trim(),
+      lastName: document.getElementById('add-lastName').value.trim(),
+      email: document.getElementById('add-email').value.trim(),
+      department: document.getElementById('add-department').value,
+      jobTitle: document.getElementById('add-jobTitle').value.trim(),
+      employmentType: document.getElementById('add-employmentType').value,
+      manager: document.getElementById('add-manager').value.trim(),
+      startDate: document.getElementById('add-startDate').value,
+      badge: 'New'
+    };
+
+    setTimeout(() => {
+      employees.unshift(newEmployee);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create employee';
+      e.target.reset();
+      setListState('success');
+      goToScreen('Employee List');
+      renderTable(newEmployee.id);
+      showToast(`Employee created — ${newEmployee.firstName} ${newEmployee.lastName} now appears in the employee list.`);
+    }, 350);
+  });
+
+  // ---- Edit Employee (AC5) ----
+  function openEdit(id) {
+    editingId = id;
+    const emp = employees.find(e => e.id === id);
+    document.getElementById('edit-subtitle').innerHTML =
+      `Editing <strong>${emp.firstName} ${emp.lastName}</strong> (${emp.id}). Fields marked <span class="required-mark">*</span> are required.`;
+    document.getElementById('edit-firstName').value = emp.firstName;
+    document.getElementById('edit-lastName').value = emp.lastName;
+    document.getElementById('edit-email').value = emp.email;
+    document.getElementById('edit-department').value = emp.department;
+    document.getElementById('edit-jobTitle').value = emp.jobTitle;
+    document.getElementById('edit-employmentType').value = emp.employmentType;
+    document.getElementById('edit-manager').value = emp.manager;
+    document.getElementById('edit-startDate').value = emp.startDate;
+    document.querySelectorAll('#edit-employee-form .form-field').forEach(f => f.classList.remove('has-error'));
+    document.getElementById('edit-error-banner').classList.remove('visible');
+    goToScreen('Edit Employee');
+  }
+
+  document.getElementById('edit-employee-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const errors = validateForm('edit');
+    const banner = document.getElementById('edit-error-banner');
+    if (errors.length > 0) {
+      banner.classList.add('visible');
+      return;
+    }
+    banner.classList.remove('visible');
+
+    const submitBtn = document.getElementById('edit-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving changes…';
+
+    const emp = employees.find(emp => emp.id === editingId);
+
+    setTimeout(() => {
+      emp.firstName = document.getElementById('edit-firstName').value.trim();
+      emp.lastName = document.getElementById('edit-lastName').value.trim();
+      emp.email = document.getElementById('edit-email').value.trim();
+      emp.department = document.getElementById('edit-department').value;
+      emp.jobTitle = document.getElementById('edit-jobTitle').value.trim();
+      emp.employmentType = document.getElementById('edit-employmentType').value;
+      emp.manager = document.getElementById('edit-manager').value.trim();
+      emp.startDate = document.getElementById('edit-startDate').value;
+      emp.badge = 'Updated';
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Save changes';
+      setListState('success');
+      goToScreen('Employee List');
+      renderTable(emp.id);
+      showToast(`Employee updated — changes saved to ${emp.firstName} ${emp.lastName}'s record.`);
+    }, 350);
+  });
+
+  // ---- Init ----
+  renderTable();
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
