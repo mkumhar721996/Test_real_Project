@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Role } from '../domain/roles';
-import { Defect, createDefect } from '../domain/defect';
+import { Defect, DefectValidationErrors, createDefect, validateDefectInput } from '../domain/defect';
 
 export interface DefectFormProps {
   role: Role;
@@ -9,11 +9,21 @@ export interface DefectFormProps {
 
 export function DefectForm({ role, onSubmit }: DefectFormProps): JSX.Element {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
+  const [errors, setErrors] = useState<DefectValidationErrors>({});
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onSubmit(createDefect({ title, assigneeId: assigneeId || undefined }, role));
+    const input = { title, description, assigneeId: assigneeId || undefined };
+    const validationErrors = validateDefectInput(input);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
+    onSubmit(createDefect(input, role));
   }
 
   return (
@@ -25,6 +35,15 @@ export function DefectForm({ role, onSubmit }: DefectFormProps): JSX.Element {
         value={title}
         onChange={(event) => setTitle(event.target.value)}
       />
+      {errors.title && <span>{errors.title}</span>}
+
+      <label htmlFor="description">Description</label>
+      <textarea
+        id="description"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+      />
+      {errors.description && <span>{errors.description}</span>}
 
       {role === 'Admin' && (
         <>
