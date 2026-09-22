@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TEST-REAL-PROJECT-STORY-022 — Create Employee Record — Design Prototype</title>
+<style>
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-fg: #101723; /** Primary text color on light backgrounds. */
+  --color-bg: #ffffff; /** Default page/surface background. */
+  --color-primary: #2563eb; /** Primary brand/interactive color. */
+  --color-primary-fg: #ffffff; /** Text/icon color for content placed on top of color-primary. */
+  --color-border: #d8dee5; /** Default border color for surfaces and controls. */
+  --color-surface: #f9fafc; /** Elevated surface background (cards, panels). */
+  --space-1: 4px; /** Smallest spacing unit. */
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --font-size-sm: 12px;
+  --font-size-md: 16px;
+  --font-size-lg: 24px;
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --shadow-sm: 0px 1px 3px 0px rgb(6% 9% 14%); /** Subtle elevation used for cards. */
+  --button-primary-background: var(--color-primary); /** Alias: primary button fill. */
+  --button-primary-foreground: var(--color-primary-fg); /** Alias: primary button text. */
+  --button-primary-border: var(--color-primary); /** Alias: primary button border. */
+  --button-primary-radius: var(--radius-md); /** Alias: primary button corner radius. */
+  --button-secondary-background: var(--color-bg); /** Alias: secondary button fill. */
+  --button-secondary-foreground: var(--color-fg); /** Alias: secondary button text. */
+  --button-secondary-border: var(--color-border); /** Alias: secondary button border. */
+  --card-default-background: var(--color-surface); /** Alias: default card fill. */
+  --card-default-border: var(--color-border); /** Alias: default card border. */
+  --card-default-radius: var(--radius-lg); /** Alias: default card corner radius. */
+}
+
+</style>
+<style>
+/* Utilities and components built exclusively from design token custom properties. */
+
+/* --- Buttons --- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-2) var(--space-3);
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+  border-radius: var(--button-primary-radius);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-background);
+  color: var(--button-secondary-foreground);
+  border-color: var(--button-secondary-border);
+  border-radius: var(--radius-md);
+}
+
+/* --- Card --- */
+
+.card {
+  background-color: var(--card-default-background);
+  border: 1px solid var(--card-default-border);
+  border-radius: var(--card-default-radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-family-base);
+  color: var(--color-fg);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.card-body {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg);
+}
+
+/* --- Chip --- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+
+.chip-primary {
+  background-color: var(--button-primary-background);
+  color: var(--button-primary-foreground);
+  border-color: var(--button-primary-border);
+}
+
+/* --- Form controls --- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: var(--font-family-base);
+}
+
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-fg);
+}
+
+.form-input {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+}
+
+.form-input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+/* --- Spacing utilities --- */
+
+.stack-1 > * + * { margin-top: var(--space-1); }
+.stack-2 > * + * { margin-top: var(--space-2); }
+.stack-3 > * + * { margin-top: var(--space-3); }
+.stack-4 > * + * { margin-top: var(--space-4); }
+
+</style>
+<style>
+  /* Page-specific styles — tokens only, no hardcoded colors/fonts/radii. */
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-family-base);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* --- Reviewer bar --- */
+  #review-bar button {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+  }
+  #review-bar button:disabled {
+    color: var(--color-border);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* --- Top app bar --- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-fg);
+    flex-wrap: wrap;
+  }
+  .topbar-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+    color: var(--color-primary-fg);
+  }
+  .topbar-role {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary-fg);
+  }
+
+  /* --- App shell: nav + main (mobile-first: stacked, nav becomes horizontal tabs) --- */
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+  }
+  .app-nav {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+  .app-nav a.nav-item {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-fg);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  .app-nav a.nav-item[aria-current="page"] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
+  }
+  .main {
+    flex: 1;
+    padding: var(--space-3);
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .app-shell { flex-direction: row; }
+    .app-nav {
+      flex-direction: column;
+      width: 200px;
+      border-bottom: none;
+      border-right: 1px solid var(--color-border);
+      flex: 0 0 auto;
+    }
+    .app-nav a.nav-item {
+      border-bottom: none;
+      border-left: 3px solid transparent;
+    }
+    .app-nav a.nav-item[aria-current="page"] {
+      border-left-color: var(--color-primary);
+      border-bottom-color: transparent;
+      background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-bg));
+    }
+    .main { padding: var(--space-4); }
+  }
+
+  /* --- Screens --- */
+  .screen-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+  .screen-heading h1 {
+    font-size: var(--font-size-lg);
+    margin: 0;
+  }
+  .screen-subtitle {
+    color: var(--color-fg);
+    font-size: var(--font-size-sm);
+    margin: var(--space-1) 0 0 0;
+  }
+  .breadcrumb {
+    font-size: var(--font-size-sm);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .breadcrumb button.linklike { padding: 0; min-height: auto; }
+
+  /* --- List-state preview toggle (review aid, not production UI) --- */
+  .state-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+  }
+  .state-preview span.label {
+    font-weight: var(--font-weight-bold);
+  }
+  .state-preview button {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    padding: var(--space-1) var(--space-2);
+    min-height: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    cursor: pointer;
+  }
+  .state-preview button[aria-pressed="true"] {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-foreground);
+    border-color: var(--button-primary-border);
+  }
+
+  /* --- Table --- */
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  table.employee-table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: var(--font-size-md);
+  }
+  table.employee-table caption {
+    text-align: left;
+  }
+  table.employee-table th,
+  table.employee-table td {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  table.employee-table thead th {
+    background-color: var(--color-surface);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+  }
+  table.employee-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  table.employee-table tbody tr.row-flash {
+    animation: row-flash 1.6s ease-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    table.employee-table tbody tr.row-flash { animation: none; }
+  }
+  @keyframes row-flash {
+    0% { background-color: var(--color-surface); }
+    100% { background-color: transparent; }
+  }
+  .name-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .row-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  /* --- Empty / error / loading states --- */
+  .placeholder-state {
+    text-align: center;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .placeholder-state .icon {
+    font-size: calc(var(--font-size-lg) * 1.5);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--space-4) * 2.5);
+    height: calc(var(--space-4) * 2.5);
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-bg));
+    margin-bottom: var(--space-2);
+  }
+  .placeholder-state h2 {
+    font-size: var(--font-size-md);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .placeholder-state p {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-fg);
+  }
+
+  .skeleton-row {
+    height: 20px;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    margin-bottom: var(--space-2);
+    background-image: linear-gradient(90deg, var(--color-surface) 25%, var(--color-bg) 37%, var(--color-surface) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-row { animation: none; }
+  }
+  @keyframes shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+  .skeleton-block { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
+
+  /* --- Forms --- */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  @media (min-width: 640px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid .form-field.full-width { grid-column: 1 / -1; }
+  }
+  select.form-input { min-height: 44px; }
+  input.form-input { min-height: 44px; }
+  .required-mark { color: var(--color-fg); font-weight: var(--font-weight-bold); }
+  .field-hint {
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+  }
+  .form-field.has-error .form-label {
+    text-decoration: underline;
+  }
+  .form-field.has-error .form-input {
+    border-width: 2px;
+    border-color: var(--color-fg);
+  }
+  .field-error-text {
+    display: none;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+  }
+  .form-field.has-error .field-error-text {
+    display: block;
+  }
+  .form-error-banner {
+    display: none;
+    border: 2px solid var(--color-fg);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .form-error-banner.visible { display: block; }
+  .form-error-banner h2 {
+    font-size: var(--font-size-md);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .form-error-banner p { margin: 0; }
+  .form-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .linklike {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    padding: var(--space-1);
+    min-height: 44px;
+  }
+
+  /* --- Employee detail view (AC3) --- */
+  .detail-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    padding: var(--space-4);
+    max-width: 640px;
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+  }
+  @media (min-width: 640px) {
+    .detail-grid { grid-template-columns: 1fr 1fr; }
+    .detail-grid dd.full-width, .detail-grid > .full-width { grid-column: 1 / -1; }
+  }
+  .detail-grid dt {
+    font-size: var(--font-size-sm);
+    color: var(--color-fg);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .detail-grid dd {
+    margin: 0;
+    font-size: var(--font-size-md);
+  }
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .detail-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    background-color: color-mix(in srgb, var(--color-primary) 18%, var(--color-bg));
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    flex-shrink: 0;
+  }
+
+  /* --- Toast --- */
+  #toast {
+    position: fixed;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    z-index: 10000;
+    max-width: 340px;
+    display: none;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  #toast.visible { display: flex; }
+  #toast .icon { font-size: var(--font-size-md); }
+  #toast p { margin: 0; font-size: var(--font-size-sm); }
+  #toast button { margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- App nav: left sidebar (top tabs on narrow viewports) — Employees · Settings. Employees is the only implemented section for this story; Settings is a non-interactive placeholder shown only to establish the app's information architecture. -->
+
+<!-- Reviewer bar -->
+<div id="review-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);font-size:13px;font-family:var(--font-family-base)">
+  <span style="font-family:var(--font-family-base);color:var(--color-fg);font-weight:var(--font-weight-bold)">TEST-REAL-PROJECT-STORY-022</span>
+  <button id="prev-btn">← Prev</button>
+  <span id="screen-label" style="flex:1;text-align:center;font-weight:600;color:var(--color-fg)"></span>
+  <button id="next-btn">Next →</button>
+</div>
+<div style="height:46px"></div><!-- spacer -->
+
+<!-- Fixture data: initial employee records -->
+<script id="fixture-data" type="application/json">
+[
+  {
+    "id": "EMP-1001",
+    "firstName": "Priya",
+    "lastName": "Natarajan",
+    "email": "priya.natarajan@peoplehub.com",
+    "department": "People Operations",
+    "jobTitle": "HR Coordinator",
+    "employmentType": "Full-time",
+    "manager": "Dana Okafor",
+    "startDate": "2023-03-06",
+    "createdAt": "2023-03-01T09:12:00",
+    "badge": null
+  },
+  {
+    "id": "EMP-1002",
+    "firstName": "Marcus",
+    "lastName": "Webb",
+    "email": "marcus.webb@peoplehub.com",
+    "department": "Engineering",
+    "jobTitle": "Software Engineer II",
+    "employmentType": "Full-time",
+    "manager": "Elena Vasquez",
+    "startDate": "2022-11-14",
+    "createdAt": "2022-11-08T14:40:00",
+    "badge": null
+  },
+  {
+    "id": "EMP-1003",
+    "firstName": "Sofia",
+    "lastName": "Reyes",
+    "email": "sofia.reyes@peoplehub.com",
+    "department": "Finance",
+    "jobTitle": "Financial Analyst",
+    "employmentType": "Full-time",
+    "manager": "Tom Lindqvist",
+    "startDate": "2024-01-22",
+    "createdAt": "2024-01-15T11:05:00",
+    "badge": null
+  }
+]
+</script>
+
+<div class="topbar">
+  <p class="topbar-title">PeopleHub HR</p>
+  <span class="topbar-role">Signed in as Priya Natarajan — HR Admin</span>
+</div>
+
+<div class="app-shell">
+  <nav class="app-nav" aria-label="Primary">
+    <a href="#" class="nav-item" aria-current="page" onclick="goToScreen('Employee List'); return false;">Employees</a>
+    <a href="#" class="nav-item" aria-disabled="true" title="Not part of this story" onclick="return false;">Settings</a>
+  </nav>
+
+  <main class="main">
+    <div id="screens">
+
+      <!--
+        Screen: Employee List
+        Notes:
+          - AC1: after a successful create, the new employee record appears at the top of this list
+            (row briefly flashes + shows a "New" chip so the reviewer can see it landed, not just infer it).
+          - "Simulate list state" row is a review aid only (not shipped UI) so the reviewer can inspect
+            loading/empty/error/success without needing live data — see UI guideline §5.
+          - Each row has a "View" action that opens the Employee Detail screen (AC3).
+      -->
+      <div class="screen" data-name="Employee List">
+        <div class="screen-heading">
+          <div>
+            <h1>Employees</h1>
+            <p class="screen-subtitle">Employee records at PeopleHub HR.</p>
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary" id="add-employee-btn" onclick="goToScreen('Add Employee')">+ Add employee</button>
+          </div>
+        </div>
+
+        <div class="state-preview">
+          <span class="label">Simulate list state (review aid):</span>
+          <button type="button" data-list-state="loading" aria-pressed="false" onclick="setListState('loading')">Loading</button>
+          <button type="button" data-list-state="empty" aria-pressed="false" onclick="setListState('empty')">Empty</button>
+          <button type="button" data-list-state="success" aria-pressed="true" onclick="setListState('success')">Populated</button>
+          <button type="button" data-list-state="error" aria-pressed="false" onclick="setListState('error')">Error</button>
+        </div>
+
+        <!-- State: loading -->
+        <div class="skeleton-block" data-list-panel="loading" style="display:none;" aria-hidden="true">
+          <div class="skeleton-row" style="width:100%;"></div>
+          <div class="skeleton-row" style="width:90%;"></div>
+          <div class="skeleton-row" style="width:95%;"></div>
+          <div class="skeleton-row" style="width:80%;"></div>
+        </div>
+
+        <!-- State: empty -->
+        <div class="placeholder-state" data-list-panel="empty" style="display:none;">
+          <span class="icon" aria-hidden="true">🗂️</span>
+          <h2>No employees yet</h2>
+          <p>Create your first employee record to get started.</p>
+          <button type="button" class="btn btn-primary" onclick="goToScreen('Add Employee')">+ Add employee</button>
+        </div>
+
+        <!-- State: error -->
+        <div class="placeholder-state" data-list-panel="error" style="display:none;">
+          <span class="icon" aria-hidden="true">⚠️</span>
+          <h2>Couldn't load employees</h2>
+          <p>Something went wrong loading the employee list. Try again.</p>
+          <button type="button" class="btn btn-secondary" onclick="setListState('success')">Retry</button>
+        </div>
+
+        <!-- State: success (populated) -->
+        <div class="table-scroll" data-list-panel="success">
+          <table class="employee-table">
+            <caption class="visually-hidden">Employee records</caption>
+            <thead>
+              <tr>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Department</th>
+                <th scope="col">Job title</th>
+                <th scope="col">Start date</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employee-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!--
+        Screen: Add Employee
+        Notes:
+          - AC1: submitting with all required fields filled creates the record, returns to the list,
+            flashes the new row, and shows a confirmation toast.
+          - AC2: submitting with any required field blank shows an inline error under that field plus a
+            summary banner at the top of the form; no record is created and every entered value —
+            including the fields that were filled in correctly — is preserved exactly as typed.
+          - "Fill with sample data" is a review aid to speed up exercising the happy path; it is not part
+            of the shipped form.
+      -->
+      <div class="screen" data-name="Add Employee">
+        <p class="breadcrumb"><button type="button" class="linklike" onclick="goToScreen('Employee List')">← Employees</button></p>
+        <div class="screen-heading">
+          <div>
+            <h1>Add employee</h1>
+            <p class="screen-subtitle">Fields marked <span class="required-mark">*</span> are required.</p>
+          </div>
+        </div>
+
+        <div id="add-form-wrapper">
+          <div class="form-error-banner" id="add-error-banner" role="alert">
+            <h2>Couldn't create employee</h2>
+            <p>Fix the highlighted field(s) below and try again.</p>
+          </div>
+
+          <form id="add-employee-form" novalidate>
+            <div class="form-grid">
+              <div class="form-field" data-field="firstName">
+                <label class="form-label" for="add-firstName">First name <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-firstName" name="firstName" type="text" autocomplete="given-name" aria-describedby="add-firstName-error">
+                <span class="field-error-text" id="add-firstName-error">First name is required.</span>
+              </div>
+              <div class="form-field" data-field="lastName">
+                <label class="form-label" for="add-lastName">Last name <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-lastName" name="lastName" type="text" autocomplete="family-name" aria-describedby="add-lastName-error">
+                <span class="field-error-text" id="add-lastName-error">Last name is required.</span>
+              </div>
+              <div class="form-field full-width" data-field="email">
+                <label class="form-label" for="add-email">Work email <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-email" name="email" type="email" autocomplete="email" aria-describedby="add-email-error">
+                <span class="field-error-text" id="add-email-error">Work email is required.</span>
+              </div>
+              <div class="form-field" data-field="department">
+                <label class="form-label" for="add-department">Department <span class="required-mark">*</span></label>
+                <select class="form-input" id="add-department" name="department" aria-describedby="add-department-error">
+                  <option value="">Select a department</option>
+                  <option>People Operations</option>
+                  <option>Engineering</option>
+                  <option>Finance</option>
+                  <option>Sales</option>
+                  <option>Marketing</option>
+                  <option>Customer Success</option>
+                </select>
+                <span class="field-error-text" id="add-department-error">Department is required.</span>
+              </div>
+              <div class="form-field" data-field="jobTitle">
+                <label class="form-label" for="add-jobTitle">Job title <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-jobTitle" name="jobTitle" type="text" aria-describedby="add-jobTitle-error">
+                <span class="field-error-text" id="add-jobTitle-error">Job title is required.</span>
+              </div>
+              <div class="form-field" data-field="startDate">
+                <label class="form-label" for="add-startDate">Start date <span class="required-mark">*</span></label>
+                <input class="form-input" id="add-startDate" name="startDate" type="date" aria-describedby="add-startDate-error">
+                <span class="field-error-text" id="add-startDate-error">Start date is required.</span>
+              </div>
+              <div class="form-field" data-field="employmentType">
+                <label class="form-label" for="add-employmentType">Employment type</label>
+                <select class="form-input" id="add-employmentType" name="employmentType">
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Contract</option>
+                </select>
+              </div>
+              <div class="form-field" data-field="manager">
+                <label class="form-label" for="add-manager">Manager</label>
+                <input class="form-input" id="add-manager" name="manager" type="text">
+                <span class="field-hint">Optional</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="add-submit-btn">Create employee</button>
+              <button type="button" class="btn btn-secondary" onclick="goToScreen('Employee List')">Cancel</button>
+              <button type="button" class="linklike" onclick="fillSampleData('add')">Fill with sample data</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!--
+        Screen: Employee Detail
+        Notes:
+          - AC3: shows every field entered on the Add Employee form so the HR Admin can confirm the
+            record was captured accurately — including optional fields (Manager) which display an
+            "Not set" placeholder rather than being silently omitted.
+          - Reached either by clicking "View" on any row in the Employee List, or automatically after a
+            successful create (see Add Employee's submit handler), so both entry points are exercised.
+      -->
+      <div class="screen" data-name="Employee Detail">
+        <p class="breadcrumb"><button type="button" class="linklike" onclick="goToScreen('Employee List')">← Employees</button></p>
+        <div class="detail-card">
+          <div class="detail-header">
+            <div class="detail-avatar" id="detail-avatar" aria-hidden="true"></div>
+            <div>
+              <h1 id="detail-name" style="margin:0; font-size:var(--font-size-lg);"></h1>
+              <p class="screen-subtitle" id="detail-id"></p>
+            </div>
+          </div>
+          <dl class="detail-grid">
+            <div>
+              <dt>Work email</dt>
+              <dd id="detail-email"></dd>
+            </div>
+            <div>
+              <dt>Department</dt>
+              <dd id="detail-department"></dd>
+            </div>
+            <div>
+              <dt>Job title</dt>
+              <dd id="detail-jobTitle"></dd>
+            </div>
+            <div>
+              <dt>Employment type</dt>
+              <dd id="detail-employmentType"></dd>
+            </div>
+            <div>
+              <dt>Start date</dt>
+              <dd id="detail-startDate"></dd>
+            </div>
+            <div>
+              <dt>Manager</dt>
+              <dd id="detail-manager"></dd>
+            </div>
+            <div class="full-width">
+              <dt>Record created</dt>
+              <dd id="detail-createdAt"></dd>
+            </div>
+          </dl>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="goToScreen('Employee List')">Back to employee list</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="toast" role="status" aria-live="polite">
+  <div class="card" style="display:flex; align-items:flex-start; gap:var(--space-2);">
+    <span class="icon" aria-hidden="true">✅</span>
+    <p id="toast-text"></p>
+    <button type="button" class="linklike" onclick="hideToast()" aria-label="Dismiss notification">✕</button>
+  </div>
+</div>
+
+<script>
+  // ---- Fixture data ----
+  const employees = JSON.parse(document.getElementById('fixture-data').textContent);
+  let nextIdNumber = 1004;
+  let viewingId = null;
+
+  // ---- Reviewer bar (canonical scaffold) ----
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(screens.length - 1, i));
+    screens.forEach((s, j) => s.style.display = j === cur ? 'block' : 'none');
+    document.getElementById('screen-label').textContent =
+      `${cur + 1} / ${screens.length}: ${screens[cur].dataset.name}`;
+  }
+  document.getElementById('prev-btn').onclick = () => show(cur - 1);
+  document.getElementById('next-btn').onclick = () => show(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' && !isTypingTarget(e.target)) show(cur + 1);
+    if (e.key === 'ArrowLeft' && !isTypingTarget(e.target)) show(cur - 1);
+  });
+  function isTypingTarget(el) {
+    return el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA');
+  }
+
+  function goToScreen(name) {
+    const idx = screens.findIndex(s => s.dataset.name === name);
+    if (idx !== -1) show(idx);
+  }
+
+  // ---- List state preview (review aid) ----
+  function setListState(state) {
+    document.querySelectorAll('[data-list-panel]').forEach(el => {
+      el.style.display = el.dataset.listPanel === state ? 'block' : 'none';
+    });
+    document.querySelectorAll('[data-list-state]').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.listState === state ? 'true' : 'false');
+    });
+    if (state === 'success') renderTable();
+  }
+
+  // ---- Table rendering ----
+  function formatDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  function formatDateTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderTable(flashId) {
+    const tbody = document.getElementById('employee-tbody');
+    tbody.innerHTML = '';
+    employees.forEach(emp => {
+      const tr = document.createElement('tr');
+      if (flashId && emp.id === flashId) tr.classList.add('row-flash');
+      const badgeHtml = emp.badge ? `<span class="chip chip-primary">${emp.badge}</span>` : '';
+      tr.innerHTML = `
+        <td>${emp.id}</td>
+        <td><div class="name-cell"><span>${emp.firstName} ${emp.lastName}</span>${badgeHtml}</div></td>
+        <td>${emp.department}</td>
+        <td>${emp.jobTitle}</td>
+        <td>${formatDate(emp.startDate)}</td>
+        <td><div class="row-actions"><button type="button" class="btn btn-secondary" onclick="openDetail('${emp.id}')">View</button></div></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ---- Employee Detail (AC3) ----
+  function openDetail(id) {
+    viewingId = id;
+    const emp = employees.find(e => e.id === id);
+    document.getElementById('detail-avatar').textContent = (emp.firstName[0] + emp.lastName[0]).toUpperCase();
+    document.getElementById('detail-name').textContent = `${emp.firstName} ${emp.lastName}`;
+    document.getElementById('detail-id').textContent = emp.id;
+    document.getElementById('detail-email').textContent = emp.email;
+    document.getElementById('detail-department').textContent = emp.department;
+    document.getElementById('detail-jobTitle').textContent = emp.jobTitle;
+    document.getElementById('detail-employmentType').textContent = emp.employmentType;
+    document.getElementById('detail-startDate').textContent = formatDate(emp.startDate);
+    document.getElementById('detail-manager').textContent = emp.manager && emp.manager.trim() !== '' ? emp.manager : 'Not set';
+    document.getElementById('detail-createdAt').textContent = formatDateTime(emp.createdAt);
+    goToScreen('Employee Detail');
+  }
+
+  // ---- Toast ----
+  let toastTimer = null;
+  function showToast(message) {
+    document.getElementById('toast-text').textContent = message;
+    const toast = document.getElementById('toast');
+    toast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 4000);
+  }
+  function hideToast() {
+    document.getElementById('toast').classList.remove('visible');
+  }
+
+  // ---- Sample data helper (review aid) ----
+  function fillSampleData(prefix) {
+    document.getElementById(`${prefix}-firstName`).value = 'Jordan';
+    document.getElementById(`${prefix}-lastName`).value = 'Blake';
+    document.getElementById(`${prefix}-email`).value = 'jordan.blake@peoplehub.com';
+    document.getElementById(`${prefix}-department`).value = 'Customer Success';
+    document.getElementById(`${prefix}-jobTitle`).value = 'Support Specialist';
+    document.getElementById(`${prefix}-startDate`).value = '2026-09-21';
+    document.getElementById(`${prefix}-employmentType`).value = 'Full-time';
+    document.getElementById(`${prefix}-manager`).value = 'Dana Okafor';
+  }
+
+  // ---- Validation ----
+  const requiredFields = ['firstName', 'lastName', 'email', 'department', 'jobTitle', 'startDate'];
+
+  function validateForm(prefix) {
+    let firstInvalid = null;
+    const errors = [];
+    requiredFields.forEach(field => {
+      const input = document.getElementById(`${prefix}-${field}`);
+      const wrapper = input.closest('.form-field');
+      const isEmpty = input.value.trim() === '';
+      wrapper.classList.toggle('has-error', isEmpty);
+      input.setAttribute('aria-invalid', isEmpty ? 'true' : 'false');
+      if (isEmpty) {
+        errors.push(field);
+        if (!firstInvalid) firstInvalid = input;
+      }
+    });
+    if (firstInvalid) firstInvalid.focus();
+    return errors;
+  }
+
+  // ---- Add Employee (AC1 + AC2) ----
+  document.getElementById('add-employee-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const errors = validateForm('add');
+    const banner = document.getElementById('add-error-banner');
+    if (errors.length > 0) {
+      banner.classList.add('visible');
+      return; // AC2 — no record created, entered values are left exactly as typed
+    }
+    banner.classList.remove('visible');
+
+    const submitBtn = document.getElementById('add-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating employee…';
+
+    const newEmployee = {
+      id: `EMP-${nextIdNumber++}`,
+      firstName: document.getElementById('add-firstName').value.trim(),
+      lastName: document.getElementById('add-lastName').value.trim(),
+      email: document.getElementById('add-email').value.trim(),
+      department: document.getElementById('add-department').value,
+      jobTitle: document.getElementById('add-jobTitle').value.trim(),
+      employmentType: document.getElementById('add-employmentType').value,
+      manager: document.getElementById('add-manager').value.trim(),
+      startDate: document.getElementById('add-startDate').value,
+      createdAt: new Date().toISOString(),
+      badge: 'New'
+    };
+
+    setTimeout(() => {
+      employees.unshift(newEmployee);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create employee';
+      e.target.reset();
+      document.querySelectorAll('#add-employee-form .form-field').forEach(f => f.classList.remove('has-error'));
+      setListState('success');
+      goToScreen('Employee List');
+      renderTable(newEmployee.id);
+      showToast(`Employee created — ${newEmployee.firstName} ${newEmployee.lastName} now appears in the employee list.`);
+    }, 350);
+  });
+
+  // ---- Init ----
+  renderTable();
+  show(0);
+</script>
+
+</body>
+</html>
+
+<!-- arc:css-inlined -->
