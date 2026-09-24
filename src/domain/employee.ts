@@ -14,6 +14,7 @@ export interface EmployeeInput {
 export interface Employee extends EmployeeInput {
   id: string;
   badge?: 'New' | 'Updated';
+  createdAt?: string;
 }
 
 export const REQUIRED_EMPLOYEE_FIELDS: (keyof EmployeeInput)[] = [
@@ -61,7 +62,7 @@ export function createEmployee(
     throw new EmployeeValidationError(errors);
   }
 
-  return { ...input, id: nextEmployeeId(existingEmployees), badge: 'New' };
+  return { ...input, id: nextEmployeeId(existingEmployees), badge: 'New', createdAt: new Date().toISOString() };
 }
 
 export function updateEmployee(existing: Employee, input: EmployeeInput, role: EmployeeRole): Employee {

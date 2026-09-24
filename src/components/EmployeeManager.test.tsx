@@ -33,6 +33,17 @@ test('AC1: HR Admin creates an employee and it appears in the employee list', ()
   expect(screen.getByText('Jordan Blake')).toBeInTheDocument();
 });
 
+test('AC3: viewing a created employee from the list shows its accurately entered details', () => {
+  render(<EmployeeManager role="HR Admin" />);
+  fireEvent.click(screen.getByRole('button', { name: /add employee/i }));
+  fillAddForm();
+  fireEvent.click(screen.getByRole('button', { name: /create employee/i }));
+  fireEvent.click(screen.getByRole('button', { name: 'View' }));
+  expect(screen.getByRole('heading', { name: 'Jordan Blake' })).toBeInTheDocument();
+  expect(screen.getByText('jordan.blake@peoplehub.com')).toBeInTheDocument();
+  expect(screen.getByText('Support Specialist')).toBeInTheDocument();
+});
+
 test('AC2: submitting the add form with a required field blank keeps the HR Admin on the form', () => {
   render(<EmployeeManager role="HR Admin" />);
   fireEvent.click(screen.getByRole('button', { name: /add employee/i }));

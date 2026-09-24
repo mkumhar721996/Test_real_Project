@@ -6,6 +6,7 @@ import {
   EmployeeRole,
   updateEmployee,
 } from '../domain/employee';
+import { EmployeeDetail } from './EmployeeDetail';
 import { EmployeeForm } from './EmployeeForm';
 import { EmployeeList } from './EmployeeList';
 
@@ -14,7 +15,7 @@ export interface EmployeeManagerProps {
   initialEmployees?: Employee[];
 }
 
-type Screen = 'list' | 'add' | 'edit';
+type Screen = 'list' | 'add' | 'edit' | 'view';
 
 interface AccessDeniedPanelProps {
   action: 'create' | 'edit';
@@ -40,6 +41,7 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
   const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
   const [screen, setScreen] = useState<Screen>('list');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewingId, setViewingId] = useState<string | null>(null);
 
   function handleAdd(input: EmployeeInput) {
     const employee = createEmployee(input, role, employees);
@@ -61,6 +63,12 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
     }
 
     return <EmployeeForm mode="add" onSubmit={handleAdd} onCancel={() => setScreen('list')} />;
+  }
+
+  const viewingEmployee = screen === 'view' ? employees.find((e) => e.id === viewingId) : undefined;
+
+  if (viewingEmployee) {
+    return <EmployeeDetail employee={viewingEmployee} onBack={() => setScreen('list')} />;
   }
 
   const editingEmployee = screen === 'edit' ? employees.find((e) => e.id === editingId) : undefined;
@@ -88,6 +96,10 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
       onEditEmployee={(id) => {
         setEditingId(id);
         setScreen('edit');
+      }}
+      onViewEmployee={(id) => {
+        setViewingId(id);
+        setScreen('view');
       }}
     />
   );
