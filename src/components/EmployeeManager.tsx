@@ -6,6 +6,7 @@ import {
   EmployeeRole,
   updateEmployee,
 } from '../domain/employee';
+import { EmployeeDetail } from './EmployeeDetail';
 import { EmployeeForm } from './EmployeeForm';
 import { EmployeeList } from './EmployeeList';
 
@@ -14,12 +15,18 @@ export interface EmployeeManagerProps {
   initialEmployees?: Employee[];
 }
 
-type Screen = 'list' | 'add' | 'edit';
+type Screen = 'list' | 'add' | 'edit' | 'view';
 
 interface AccessDeniedPanelProps {
-  action: 'create' | 'edit';
+  action: 'create' | 'edit' | 'view';
   onBack: () => void;
 }
+
+const ACCESS_DENIED_GERUND: Record<AccessDeniedPanelProps['action'], string> = {
+  create: 'Creating',
+  edit: 'Editing',
+  view: 'Viewing',
+};
 
 function AccessDeniedPanel({ action, onBack }: AccessDeniedPanelProps): JSX.Element {
   return (
@@ -28,7 +35,7 @@ function AccessDeniedPanel({ action, onBack }: AccessDeniedPanelProps): JSX.Elem
         🚫
       </span>
       <h2>You don't have permission to {action} employee records</h2>
-      <p>{action === 'create' ? 'Creating' : 'Editing'} employee records requires the HR Admin role.</p>
+      <p>{ACCESS_DENIED_GERUND[action]} employee records requires the HR Admin role.</p>
       <button type="button" className="btn btn-secondary" onClick={onBack}>
         Back to employee list
       </button>
@@ -40,6 +47,7 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
   const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
   const [screen, setScreen] = useState<Screen>('list');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewingId, setViewingId] = useState<string | null>(null);
 
   function handleAdd(input: EmployeeInput) {
     const employee = createEmployee(input, role, employees);
@@ -61,6 +69,16 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
     }
 
     return <EmployeeForm mode="add" onSubmit={handleAdd} onCancel={() => setScreen('list')} />;
+  }
+
+  const viewingEmployee = screen === 'view' ? employees.find((e) => e.id === viewingId) : undefined;
+
+  if (viewingEmployee && role !== 'HR Admin') {
+    return <AccessDeniedPanel action="view" onBack={() => setScreen('list')} />;
+  }
+
+  if (viewingEmployee) {
+    return <EmployeeDetail employee={viewingEmployee} onBack={() => setScreen('list')} />;
   }
 
   const editingEmployee = screen === 'edit' ? employees.find((e) => e.id === editingId) : undefined;
@@ -88,6 +106,10 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
       onEditEmployee={(id) => {
         setEditingId(id);
         setScreen('edit');
+      }}
+      onViewEmployee={(id) => {
+        setViewingId(id);
+        setScreen('view');
       }}
     />
   );

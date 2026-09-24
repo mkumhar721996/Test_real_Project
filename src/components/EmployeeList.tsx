@@ -4,9 +4,15 @@ export interface EmployeeListProps {
   employees: Employee[];
   onAddEmployee: () => void;
   onEditEmployee: (id: string) => void;
+  onViewEmployee: (id: string) => void;
 }
 
-export function EmployeeList({ employees, onAddEmployee, onEditEmployee }: EmployeeListProps): JSX.Element {
+export function EmployeeList({
+  employees,
+  onAddEmployee,
+  onEditEmployee,
+  onViewEmployee,
+}: EmployeeListProps): JSX.Element {
   return (
     <div>
       <div className="screen-heading">
@@ -50,13 +56,22 @@ export function EmployeeList({ employees, onAddEmployee, onEditEmployee }: Emplo
                 <td>{employee.jobTitle}</td>
                 <td>{employee.startDate}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => onEditEmployee(employee.id)}
-                  >
-                    Edit
-                  </button>
+                  <div className="row-actions">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => onViewEmployee(employee.id)}
+                    >
+                      View
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => onEditEmployee(employee.id)}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

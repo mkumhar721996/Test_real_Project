@@ -97,3 +97,10 @@ test('security: access is denied before validation runs for a non-HR-Admin updat
     EmployeeAccessDeniedError
   );
 });
+
+test('AC3: createEmployee stamps a createdAt timestamp used by the detail view', () => {
+  const before = Date.now();
+  const employee = createEmployee(validInput(), 'HR Admin', []);
+  expect(typeof employee.createdAt).toBe('string');
+  expect(new Date(employee.createdAt as string).getTime()).toBeGreaterThanOrEqual(before);
+});
