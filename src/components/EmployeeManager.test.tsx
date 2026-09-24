@@ -42,6 +42,7 @@ test('AC3: viewing a created employee from the list shows its accurately entered
   expect(screen.getByRole('heading', { name: 'Jordan Blake' })).toBeInTheDocument();
   expect(screen.getByText('jordan.blake@peoplehub.com')).toBeInTheDocument();
   expect(screen.getByText('Support Specialist')).toBeInTheDocument();
+  expect(screen.getByText('2026-09-21')).toBeInTheDocument();
 });
 
 test('AC2: submitting the add form with a required field blank keeps the HR Admin on the form', () => {
@@ -81,6 +82,13 @@ test('security: a non-HR-Admin sees an access-denied panel instead of the edit f
   fireEvent.click(screen.getByRole('button', { name: /edit/i }));
   expect(screen.getByText(/you don't have permission to edit employee records/i)).toBeInTheDocument();
   expect(screen.queryByLabelText(/job title/i)).not.toBeInTheDocument();
+});
+
+test('security: a non-HR-Admin sees an access-denied panel instead of the employee detail view', () => {
+  render(<EmployeeManager role="Manager" initialEmployees={[priyaFixture()]} />);
+  fireEvent.click(screen.getByRole('button', { name: 'View' }));
+  expect(screen.getByText(/you don't have permission to view employee records/i)).toBeInTheDocument();
+  expect(screen.queryByText('priya.natarajan@peoplehub.com')).not.toBeInTheDocument();
 });
 
 test('security: a non-HR-Admin cannot modify an employee record even if the edit form were reached', () => {

@@ -18,9 +18,15 @@ export interface EmployeeManagerProps {
 type Screen = 'list' | 'add' | 'edit' | 'view';
 
 interface AccessDeniedPanelProps {
-  action: 'create' | 'edit';
+  action: 'create' | 'edit' | 'view';
   onBack: () => void;
 }
+
+const ACCESS_DENIED_GERUND: Record<AccessDeniedPanelProps['action'], string> = {
+  create: 'Creating',
+  edit: 'Editing',
+  view: 'Viewing',
+};
 
 function AccessDeniedPanel({ action, onBack }: AccessDeniedPanelProps): JSX.Element {
   return (
@@ -29,7 +35,7 @@ function AccessDeniedPanel({ action, onBack }: AccessDeniedPanelProps): JSX.Elem
         🚫
       </span>
       <h2>You don't have permission to {action} employee records</h2>
-      <p>{action === 'create' ? 'Creating' : 'Editing'} employee records requires the HR Admin role.</p>
+      <p>{ACCESS_DENIED_GERUND[action]} employee records requires the HR Admin role.</p>
       <button type="button" className="btn btn-secondary" onClick={onBack}>
         Back to employee list
       </button>
@@ -66,6 +72,10 @@ export function EmployeeManager({ role, initialEmployees = [] }: EmployeeManager
   }
 
   const viewingEmployee = screen === 'view' ? employees.find((e) => e.id === viewingId) : undefined;
+
+  if (viewingEmployee && role !== 'HR Admin') {
+    return <AccessDeniedPanel action="view" onBack={() => setScreen('list')} />;
+  }
 
   if (viewingEmployee) {
     return <EmployeeDetail employee={viewingEmployee} onBack={() => setScreen('list')} />;

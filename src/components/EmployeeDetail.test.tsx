@@ -26,6 +26,7 @@ test('AC3: displays every entered employee detail accurately', () => {
   expect(screen.getByText('Customer Success')).toBeInTheDocument();
   expect(screen.getByText('Support Specialist')).toBeInTheDocument();
   expect(screen.getByText('Full-time')).toBeInTheDocument();
+  expect(screen.getByText('2026-09-21')).toBeInTheDocument();
   expect(screen.getByText('Dana Okafor')).toBeInTheDocument();
 });
 
